@@ -68,6 +68,25 @@ app.get('/manifest.json', (req, res) => {
 app.get('/launchericon-512x512.png', (req, res) => {
   res.sendFile(path.join(__dirname, 'launchericon-512x512.png'));
 });
+app.get('/launchericon-192x192.png', (req, res) => {
+  res.sendFile(path.join(__dirname, 'launchericon-192x192.png'));
+});
+
+app.get('/launchericon-144x144.png', (req, res) => {
+  res.sendFile(path.join(__dirname, 'launchericon-144x144.png'));
+});
+
+app.get('/launchericon-96x96.png', (req, res) => {
+  res.sendFile(path.join(__dirname, 'launchericon-96x96.png'));
+});
+
+app.get('/launchericon-72x72.png', (req, res) => {
+  res.sendFile(path.join(__dirname, 'launchericon-72x72.png'));
+});
+
+app.get('/launchericon-48x48.png', (req, res) => {
+  res.sendFile(path.join(__dirname, 'launchericon-48x48.png'));
+});
 app.get('/pwabuilder-sw.js', (req, res) => {
   res.type('application/javascript');
   res.sendFile(path.join(__dirname, 'pwabuilder-sw.js'));
