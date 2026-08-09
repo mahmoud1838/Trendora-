@@ -574,7 +574,7 @@ app.post('/api/auth/logout', (req, res) => {
 });
 
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+  res.sendFile(path.join(__dirname, 'index.html'));
 });
 
 const port = Number(process.env.PORT || 3000);
