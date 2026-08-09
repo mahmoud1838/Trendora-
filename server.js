@@ -32,7 +32,10 @@ app.get('/manifest.json', (req, res) => {
     ]
   });
 });
-
+app.get('/pwabuilder-sw.js', (req, res) => {
+  res.type('application/javascript');
+  res.sendFile(path.join(__dirname, 'pwabuilder-sw.js'));
+});
 app.use(express.json({ limit: '2mb' }));
 
 app.disable('x-powered-by');
