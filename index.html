@@ -322,10 +322,26 @@ function renderStep(){
   localStorage.setItem('trendoraCurrentStep',String(current));
 }
 function nextStep(){if(current<getStepCount()-1){current++;renderStep();autoSave();}}
-  window.addEventListener('message', function(event) {
-  if (event.data && event.data.type === 'TRENDORA_NEXT') {
+window.addEventListener('message', function(event) {
+
+  if (!event.data) return;
+
+  if (event.data.type === 'TRENDORA_NEXT') {
     nextStep();
   }
+
+  if (event.data.type === 'TRENDORA_PREVIOUS') {
+    prevStep();
+  }
+
+  if (event.data.type === 'TRENDORA_DONE') {
+    markCurrentDone();
+  }
+
+  if (event.data.type === 'TRENDORA_RESET') {
+    resetStep();
+  }
+
 });
 
 function prevStep(){if(current>0){current--;renderStep();autoSave();}}
