@@ -820,13 +820,29 @@ verifyModal=async function(){
 })();
 </script>
   <script>
-window.addEventListener('pageshow', function(){
-  const pending = JSON.parse(localStorage.getItem('trendoraPendingAuth') || 'null');
+<script>
+function restorePendingAuth(){
+  try{
+    const pending = JSON.parse(
+      localStorage.getItem('trendoraPendingAuth') || 'null'
+    );
 
-  if(pending && pending.email){
-    openAuthModal(pending.mode || 'reset', pending.email);
+    if(pending && pending.email){
+      openAuthModal(pending.mode || 'reset', pending.email);
+    }
+  }catch(e){}
+}
+
+window.addEventListener('pageshow', restorePendingAuth);
+
+document.addEventListener('visibilitychange', function(){
+  if(document.visibilityState === 'visible'){
+    restorePendingAuth();
   }
 });
+
+window.addEventListener('focus', restorePendingAuth);
+</script>
 </script>
 </body>
 </html>
