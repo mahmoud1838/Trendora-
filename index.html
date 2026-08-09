@@ -742,7 +742,27 @@ async function verifyModal(){
   }
 
   try{
-    if(authModalState.mode==='reset'){
+    if(authModalState.mode==='change'){
+  const code=getModalCode();
+
+  try{
+    await api('/api/auth/confirm-change-password',{
+      method:'POST',
+      body:JSON.stringify({
+        code,
+        newPassword:authModalState.pendingNewPassword
+      })
+    });
+
+    closeAuthModal();
+    alert('Password changed successfully.');
+    return;
+
+  }catch(e){
+    return modalMsg('Invalid or expired verification code.');
+  }
+
+}else if(authModalState.mode==='reset'){
 
       // First: verify the reset code only
       if(!authModalState.codeVerified){
