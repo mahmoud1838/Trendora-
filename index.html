@@ -674,10 +674,11 @@ forgotPassword=requestPasswordReset;
 let authModalState={mode:'',email:'',timer:null};
 function openAuthModal(mode,email){
   authModalState={mode,email,timer:null};
+
   localStorage.setItem('trendoraPendingAuth', JSON.stringify({
-  mode: mode,
-  email: email
-}));
+    mode: mode,
+    email: email
+  }));
   $('authModal').classList.remove('hidden');
   $('authModalMsg').innerHTML='';
   $('codeFields').classList.remove('hidden');
