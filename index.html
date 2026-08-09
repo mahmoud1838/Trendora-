@@ -735,37 +735,109 @@ document.addEventListener('keydown',e=>{
   if(e.key==='Backspace'&&!e.target.value)e.target.previousElementSibling?.focus();
 });
 async function verifyModal(){
-  console.log('VERIFY MODAL CALLED');
   const code=getModalCode();
-  if(!/^\d{6}$/.test(code))return modalMsg('Enter all 6 digits.');
+
+  if(!/^\d{6}$/.test(code)){
+    return modalMsg('Enter all 6 digits.');
+  }
+
   try{
     if(authModalState.mode==='reset'){
-      const p=$('resetNewPassword').value,c=$('resetConfirmPassword').value;
-      if(p.length<8)return modalMsg('Password must be at least 8 characters.');
-      if(p!==c)return modalMsg('Passwords do not match.');
-      try {
-  await api('/api/auth/reset-password',{
-    method:'POST',
-    body:JSON.stringify({
-      email:authModalState.email,
-      code,
-      newPassword:p
-    })
-  });
-} catch(e) {
-  modalMsg('Invalid or expired reset code.');
-  return;
-}
-      closeAuthModal();msg('loginMsg','Password changed successfully. You can sign in now.','ok');
+
+      // First: verify the reset code only
+      if(!authModalState.codeVerified){
+
+        await api('/api/auth/verify-reset-code',{
+          method:'POST',
+          body:JSON.stringify({
+            email:authModalState.email,
+            code
+          })
+        });
+
+        // Code is correct
+        authModalState.codeVerified=true;
+        authModalState.verifiedCode=code;
+
+        $('resetPasswordFields').classList.remove('hidden');
+        $('authModalTitle').textContent='Reset your password';
+        $('authModalSub').textContent='Enter your new password';
+        $('authModalPrimary').textContent='Reset Password';
+
+        modalMsg('Code verified successfully.','ok');
+
+        $('resetNewPassword').focus();
+
+        return;
+      }
+
+      // Second: reset password after code verification
+      const p=$('resetNewPassword').value;
+      const c=$('resetConfirmPassword').value;
+
+      if(p.length<8){
+        return modalMsg('Password must be at least 8 characters.');
+      }
+
+      if(p!==c){
+        return modalMsg('Passwords do not match.');
+      }
+
+      await api('/api/auth/reset-password',{
+        method:'POST',
+        body:JSON.stringify({
+          email:authModalState.email,
+          code:authModalState.verifiedCode,
+          newPassword:p
+        })
+      });
+
+      closeAuthModal();
+
+      msg(
+        'loginMsg',
+        'Password changed successfully. You can sign in now.',
+        'ok'
+      );
+
     }else{
-      const r=await api('/api/auth/verify-email',{method:'POST',body:JSON.stringify({email:authModalState.email,code})});
-      if(r.token){trendoraToken=r.token;localStorage.setItem('trendoraAuthToken',trendoraToken);}
-      closeAuthModal();msg('loginMsg','Email verified successfully. You can sign in now.','ok');msg('signupMsg','Email verified successfully. You can sign in now.','ok');
+
+      const r=await api('/api/auth/verify-email',{
+        method:'POST',
+        body:JSON.stringify({
+          email:authModalState.email,
+          code
+        })
+      });
+
+      if(r.token){
+        trendoraToken=r.token;
+        localStorage.setItem('trendoraAuthToken',trendoraToken);
+      }
+
+      closeAuthModal();
+
+      msg(
+        'loginMsg',
+        'Email verified successfully. You can sign in now.',
+        'ok'
+      );
+
+      msg(
+        'signupMsg',
+        'Email verified successfully. You can sign in now.',
+        'ok'
+      );
     }
+
   }catch(e){
-  modalMsg(e.message || 'Invalid or expired reset code.');
-}
-}
+    modalMsg(
+      authModalState.mode==='reset'
+        ? 'Invalid or expired reset code.'
+        : e.message
+    );
+  }
+  }
 async function resendCode(){
   try{
     const purpose=authModalState.mode==='reset'?'request-reset':'resend-verification';
