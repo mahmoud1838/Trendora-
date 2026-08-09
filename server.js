@@ -25,7 +25,8 @@ app.use((req,res,next)=>{
 
 app.use(express.static(path.join(__dirname,'public')));
 
-const fs=require('fs');
+const supabaseUrl=process.env.SUPABASE_URL;
+const supabaseKey=process.env.SUPABASE_SECRET_KEY;
 if(dbDir && dbDir!=='.') fs.mkdirSync(dbDir,{recursive:true});
 db.pragma('journal_mode = WAL');
 db.exec(`
