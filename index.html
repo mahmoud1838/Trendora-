@@ -604,8 +604,17 @@ async function changePasswordV6(){
   }catch(err){alert(err.message);}
 }
 async function logoutV6(){
-  try{await api('/api/auth/logout',{method:'POST'});}catch(e){}
-  trendoraToken='';localStorage.removeItem('trendoraAuthToken');logout();
+  try {
+    await api('/api/auth/logout',{method:'POST'});
+  } catch(e) {}
+
+  trendoraToken = '';
+  localStorage.removeItem('trendoraAuthToken');
+  localStorage.removeItem('trendoraLogged');
+
+  $('app').classList.add('hidden');
+  $('auth').classList.remove('hidden');
+  showLogin();
 }
 function applyRemoteAccount(u){
   const a=JSON.parse(localStorage.getItem('trendoraAccount')||'{}');
