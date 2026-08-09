@@ -69,9 +69,10 @@ app.get('/launchericon-512x512.png', (req, res) => {
   res.sendFile(path.join(__dirname, 'launchericon-512x512.png'));
 });
 app.get('/launchericon-192x192.png', (req, res) => {
-  res.sendFile(path.join(__dirname, 'launchericon-192x192.png'));
+  res.sendFile(
+    path.join(process.cwd(), 'launchericon-192x192.png')
+  );
 });
-
 app.get('/launchericon-144x144.png', (req, res) => {
   res.sendFile(path.join(__dirname, 'launchericon-144x144.png'));
 });
