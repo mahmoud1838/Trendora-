@@ -336,15 +336,48 @@ function markCurrentDone(){
   renderStep();renderDashboard();autoSave();
 }
 function openSite(){
-  if(!getStepCount())return alert('Add a workflow step first.');
+  if(!getStepCount()){
+    return alert('Add a workflow step first.');
+  }
+
   let u=(data[current].site||'').trim();
-  if(!u)return alert('Add a website URL for this step in Settings.');
-  if(!/^https?:\/\//i.test(u))u='https://'+u;
+
+  if(!u){
+    return alert('Add a website URL for this step in Settings.');
+  }
+
+  if(!/^https?:\/\//i.test(u)){
+    u='https://'+u;
+  }
+
   try{
     const url=new URL(u);
-    if(url.protocol!=='http:'&&url.protocol!=='https:')throw new Error();
-    window.open(url.href,'_blank','noopener,noreferrer');
-  }catch(e){alert('Please enter a valid website URL in Settings.');}
+
+    if(url.protocol!=='http:' && url.protocol!=='https:'){
+      throw new Error();
+    }
+
+    const browser=document.getElementById('internalBrowser');
+    const frame=document.getElementById('internalBrowserFrame');
+    const title=document.getElementById('internalBrowserTitle');
+
+    title.textContent=data[current].title || 'Website';
+
+    frame.src=url.href;
+
+    browser.classList.remove('hidden');
+
+  }catch(e){
+    alert('Please enter a valid website URL in Settings.');
+  }
+}
+
+function closeInternalBrowser(){
+  const browser=document.getElementById('internalBrowser');
+  const frame=document.getElementById('internalBrowserFrame');
+
+  frame.src='about:blank';
+  browser.classList.add('hidden');
 }
 function addStep(){
   const n=data.length+1;
