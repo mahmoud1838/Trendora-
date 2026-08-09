@@ -846,10 +846,48 @@ function restorePendingAuth(){
       localStorage.getItem('trendoraPendingAuth') || 'null'
     );
 
-    if(pending && pending.email){
-      openAuthModal(pending.mode || 'reset', pending.email);
-    }
-  }catch(e){}
+    if(!pending || !pending.email) return;
+
+    setTimeout(function(){
+      const modal = $('authModal');
+
+      if(modal){
+        modal.classList.remove('hidden');
+      }
+
+      authModalState = {
+        mode: pending.mode || 'reset',
+        email: pending.email,
+        timer: null
+      };
+
+      $('authModalTitle').textContent =
+        authModalState.mode === 'reset'
+        ? 'Reset your password'
+        : 'Verify your email';
+
+      $('authModalSub').textContent =
+        (authModalState.mode === 'reset'
+        ? 'We sent a password reset code to '
+        : 'We sent a verification code to ')
+        + authModalState.email;
+
+      $('authModalPrimary').textContent =
+        authModalState.mode === 'reset'
+        ? 'Reset Password'
+        : 'Verify Email';
+
+      $('codeFields').classList.remove('hidden');
+      $('resetPasswordFields').classList.toggle(
+        'hidden',
+        authModalState.mode !== 'reset'
+      );
+
+    },500);
+
+  }catch(e){
+    console.error('restorePendingAuth error:',e);
+  }
 }
 
 window.addEventListener('pageshow', restorePendingAuth);
