@@ -447,22 +447,88 @@ function previewCoverImage(event){
   };
   reader.readAsDataURL(file);
 }
-function saveProfile(){
-  const first=$('profileFirst').value.trim(),last=$('profileLast').value.trim();
-  if(!first)return msg('profileMsg','Please enter your first name.');
-  const account=JSON.parse(localStorage.getItem('trendoraAccount')||'{}');
-  account.first=first;account.last=last;
-  const avatarInput=$('profileImageFile'),coverInput=$('coverImageFile');
-  const save=()=>{localStorage.setItem('trendoraAccount',JSON.stringify(account));renderProfileUI();showPage('dashboard');};
-  const readCover=()=>{
+async function saveProfile(){
+  const first=$('profileFirst').value.trim();
+  const last=$('profileLast').value.trim();
+
+  if(!first){
+    return msg('profileMsg','Please enter your first name.');
+  }
+
+  const account=JSON.parse(
+    localStorage.getItem('trendoraAccount')||'{}'
+  );
+
+  const avatarInput=$('profileImageFile');
+  const coverInput=$('coverImageFile');
+
+  let avatar=account.avatar||'';
+  let cover=account.cover||'';
+
+  try{
+    if(avatarInput.files&&avatarInput.files[0]){
+      avatar=await fileToDataURL(avatarInput.files[0]);
+    }
+
     if(coverInput.files&&coverInput.files[0]){
-      const r=new FileReader();r.onload=()=>{account.cover=r.result;save();};r.readAsDataURL(coverInput.files[0]);
-    }else save();
-  };
-  if(avatarInput.files&&avatarInput.files[0]){
-    const r=new FileReader();r.onload=()=>{account.avatar=r.result;readCover();};r.readAsDataURL(avatarInput.files[0]);
-  }else readCover();
+      cover=await fileToDataURL(coverInput.files[0]);
+    }
+
+    const r=await api('/api/me',{
+      method:'PUT',
+      body:JSON.stringify({
+        firstName:first,
+        lastName:last,
+        avatar:avatar,
+        cover:cover
+      })
+    });
+
+    account.first=first;
+    account.last=last;
+    account.avatar=avatar;
+    account.cover=cover;
+
+    localStorage.setItem(
+      'trendoraAccount',
+      JSON.stringify(account)
+    );
+
+    renderProfileUI();
+
+    msg(
+      'profileMsg',
+      'Profile saved successfully.',
+      'ok'
+    );
+
+    setTimeout(()=>{
+      showPage('dashboard');
+    },700);
+
+  }catch(err){
+    msg(
+      'profileMsg',
+      err.message||'Could not save profile.'
+    );
+  }
 }
+
+function fileToDataURL(file){
+  return new Promise((resolve,reject)=>{
+    const reader=new FileReader();
+
+    reader.onload=()=>{
+      resolve(reader.result);
+    };
+
+    reader.onerror=()=>{
+      reject(new Error('Could not read image.'));
+    };
+
+    reader.readAsDataURL(file);
+  });
+       }
 function makeAvatar(name){
   const letter=(name||'U').trim().charAt(0).toUpperCase();
   const svg='<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200"><rect width="100%" height="100%" fill="#e8edf5"/><text x="50%" y="56%" text-anchor="middle" font-size="96" font-family="Arial" fill="#334d7d">'+letter+'</text></svg>';
