@@ -385,6 +385,13 @@ function closeInternalBrowser(){
   frame.src='about:blank';
   browser.classList.add('hidden');
 }
+function closeInternalBrowser(){
+  const browser=document.getElementById('internalBrowser');
+  const frame=document.getElementById('internalBrowserFrame');
+
+  frame.src='about:blank';
+  browser.classList.add('hidden');
+}
 function addStep(){
   const n=data.length+1;
   data.push({site:'https://example.com/',title:'Step '+n,desc:'Description for step '+n,status:'todo'});
