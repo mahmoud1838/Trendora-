@@ -706,7 +706,30 @@ app.get('/api/me', auth, async (req, res) => {
     });
   }
 });
+app.put('/api/me', auth, async (req, res) => {
+  try {
+    const { firstName, lastName, avatar, cover } = req.body;
 
+    const { data, error } = await supabase
+      .from('users')
+      .update({
+        first_name: firstName,
+        last_name: lastName,
+        avatar: avatar || '',
+        cover: cover || ''
+      })
+      .eq('id', req.user.id)
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    res.json({ user: data });
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ error: 'Could not update profile.' });
+  }
+});
 app.post('/api/auth/logout', (req, res) => {
   res.json({ ok: true });
 });
