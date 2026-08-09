@@ -27,7 +27,6 @@ app.use(express.static(path.join(__dirname,'public')));
 
 const fs=require('fs');
 if(dbDir && dbDir!=='.') fs.mkdirSync(dbDir,{recursive:true});
-const db=new Database(dbFile);
 db.pragma('journal_mode = WAL');
 db.exec(`
 CREATE TABLE IF NOT EXISTS users(
