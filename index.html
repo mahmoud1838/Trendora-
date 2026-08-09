@@ -322,6 +322,11 @@ function renderStep(){
   localStorage.setItem('trendoraCurrentStep',String(current));
 }
 function nextStep(){if(current<getStepCount()-1){current++;renderStep();autoSave();}}
+  window.addEventListener('message', function(event) {
+  if (event.data && event.data.type === 'TRENDORA_NEXT') {
+    nextStep();
+  }
+});
 function prevStep(){if(current>0){current--;renderStep();autoSave();}}
 function resetStep(){current=0;renderStep();autoSave();}
 function setCurrentStatus(value){
