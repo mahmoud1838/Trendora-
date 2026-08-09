@@ -727,7 +727,19 @@ async function verifyModal(){
       const p=$('resetNewPassword').value,c=$('resetConfirmPassword').value;
       if(p.length<8)return modalMsg('Password must be at least 8 characters.');
       if(p!==c)return modalMsg('Passwords do not match.');
-      await api('/api/auth/reset-password',{method:'POST',body:JSON.stringify({email:authModalState.email,code,newPassword:p})});
+      try {
+  await api('/api/auth/reset-password',{
+    method:'POST',
+    body:JSON.stringify({
+      email:authModalState.email,
+      code,
+      newPassword:p
+    })
+  });
+} catch(e) {
+  modalMsg('Invalid or expired reset code.');
+  return;
+}
       closeAuthModal();msg('loginMsg','Password changed successfully. You can sign in now.','ok');
     }else{
       const r=await api('/api/auth/verify-email',{method:'POST',body:JSON.stringify({email:authModalState.email,code})});
