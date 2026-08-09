@@ -754,11 +754,32 @@ requestPasswordReset=async function(){
     return msg('loginMsg','Enter your email first.');
   }
 
+  const pending=JSON.parse(
+    localStorage.getItem('trendoraPendingAuth') || 'null'
+  );
+
+  if(pending && pending.email===e && pending.mode==='reset'){
+    openAuthModal('reset',e);
+    return;
+  }
+
   try{
     await api('/api/auth/request-reset',{
       method:'POST',
       body:JSON.stringify({email:e})
     });
+
+    localStorage.setItem('trendoraPendingAuth',JSON.stringify({
+      mode:'reset',
+      email:e
+    }));
+
+    openAuthModal('reset',e);
+
+  }catch(err){
+    msg('loginMsg',err.message);
+  }
+};
 
     localStorage.setItem('trendoraPendingAuth',JSON.stringify({
       mode:'reset',
