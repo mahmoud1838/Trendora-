@@ -5,7 +5,7 @@ const path=require('path');
 const crypto=require('crypto');
 const jwt=require('jsonwebtoken');
 const bcrypt=require('bcryptjs');
-const Database=require('better-sqlite3');
+const { createClient } = require('@supabase/supabase-js');
 const nodemailer=require('nodemailer');
 
 const app=express();
