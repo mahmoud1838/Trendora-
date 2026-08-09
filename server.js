@@ -11,7 +11,25 @@ const { createClient } = require('@supabase/supabase-js');
 const app = express();
 app.use(express.static(__dirname));
 app.get('/manifest.json', (req, res) => {
-  res.sendFile(path.join(__dirname, 'manifest.json'));
+  res.type('application/manifest+json');
+  res.send({
+    background_color: "#ffffff",
+    dir: "ltr",
+    display: "standalone",
+    name: "Trendora Workflow",
+    orientation: "any",
+    scope: "/",
+    short_name: "Trendora",
+    start_url: "/",
+    theme_color: "#ffffff",
+    id: "/",
+    description: "Trendora helps affiliate marketers manage the entire product workflow — from sourcing and preparing products for Easy Order to creating marketing media and tracking customer delivery.",
+    lang: "en",
+    display_override: [
+      "window-controls-overlay",
+      "standalone"
+    ]
+  });
 });
 
 app.use(express.json({ limit: '2mb' }));
