@@ -674,6 +674,10 @@ forgotPassword=requestPasswordReset;
 let authModalState={mode:'',email:'',timer:null};
 function openAuthModal(mode,email){
   authModalState={mode,email,timer:null};
+  localStorage.setItem('trendoraPendingAuth', JSON.stringify({
+  mode: mode,
+  email: email
+}));
   $('authModal').classList.remove('hidden');
   $('authModalMsg').innerHTML='';
   $('codeFields').classList.remove('hidden');
@@ -687,8 +691,10 @@ function openAuthModal(mode,email){
 }
 function closeAuthModal(){
   if(authModalState.timer)clearInterval(authModalState.timer);
+  localStorage.removeItem('trendoraPendingAuth');
   $('authModal').classList.add('hidden');
 }
+  
 function startCodeTimer(seconds){
   let left=seconds;
   clearInterval(authModalState.timer);
@@ -812,6 +818,15 @@ verifyModal=async function(){
     });
   }
 })();
+</script>
+  <script>
+window.addEventListener('pageshow', function(){
+  const pending = JSON.parse(localStorage.getItem('trendoraPendingAuth') || 'null');
+
+  if(pending && pending.email){
+    openAuthModal(pending.mode || 'reset', pending.email);
+  }
+});
 </script>
 </body>
 </html>
