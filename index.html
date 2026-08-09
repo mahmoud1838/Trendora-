@@ -845,7 +845,7 @@ async function resendCode(){
     modalMsg('A new code was sent.','ok');startCodeTimer(600);
   }catch(e){modalMsg(e.message);}
 }
-document.getElementById('authModalPrimary').addEventListener('click',verifyModal);
+document.getElementById('authModalPrimary').onclick = verifyModal;;
 </script>
 
 <script>
