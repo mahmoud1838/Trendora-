@@ -26,8 +26,6 @@ app.use((req,res,next)=>{
 app.use(express.static(path.join(__dirname,'public')));
 
 const fs=require('fs');
-const dbFile=process.env.DB_FILE||'trendora.sqlite';
-const dbDir=path.dirname(dbFile);
 if(dbDir && dbDir!=='.') fs.mkdirSync(dbDir,{recursive:true});
 const db=new Database(dbFile);
 db.pragma('journal_mode = WAL');
