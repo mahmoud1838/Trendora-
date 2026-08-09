@@ -1004,5 +1004,14 @@ document.addEventListener('visibilitychange', function(){
 
 window.addEventListener('focus', restorePendingAuth);
 </script>
+  <script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/pwabuilder-sw.js')
+        .then(() => console.log('Service Worker registered successfully'))
+        .catch((error) => console.error('Service Worker registration failed:', error));
+    });
+  }
+              </script>
 </body>
 </html>
