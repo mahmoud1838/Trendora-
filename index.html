@@ -995,17 +995,7 @@ requestPasswordReset=async function(){
   }
 };
 
-    localStorage.setItem('trendoraPendingAuth',JSON.stringify({
-      mode:'reset',
-      email:e
-    }));
 
-    openAuthModal('reset',e);
-
-  }catch(err){
-    msg('loginMsg',err.message);
-  }
-};
 changePasswordV6=async function(){
   const current=prompt('Current password:');
   if(current===null)return;
