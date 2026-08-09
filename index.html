@@ -733,7 +733,9 @@ async function verifyModal(){
       if(r.token){trendoraToken=r.token;localStorage.setItem('trendoraAuthToken',trendoraToken);}
       closeAuthModal();msg('loginMsg','Email verified successfully. You can sign in now.','ok');msg('signupMsg','Email verified successfully. You can sign in now.','ok');
     }
-  }catch(e){modalMsg(e.message);}
+  }catch(e){
+  modalMsg(e.message || 'Invalid or expired reset code.');
+}
 }
 async function resendCode(){
   try{
