@@ -274,6 +274,8 @@ function forgotPassword(){
 }
 function logout(){
   localStorage.removeItem('trendoraLogged');
+  localStorage.removeItem('trendoraAuthToken');
+  trendoraToken = '';
   $('app').classList.add('hidden');
   $('auth').classList.remove('hidden');
   showLogin();
