@@ -748,9 +748,27 @@ document.getElementById('authModalPrimary').addEventListener('click',verifyModal
 showVerification=function(mode,email){openAuthModal('verify',email);};
 requestPasswordReset=async function(){
   const e=$('loginEmail').value.trim().toLowerCase();
-  if(!e)return msg('loginMsg','Enter your email first.');
-  try{await api('/api/auth/request-reset',{method:'POST',body:JSON.stringify({email:e})});openAuthModal('reset',e);}
-  catch(err){msg('loginMsg',err.message);}
+
+  if(!e){
+    return msg('loginMsg','Enter your email first.');
+  }
+
+  try{
+    await api('/api/auth/request-reset',{
+      method:'POST',
+      body:JSON.stringify({email:e})
+    });
+
+    localStorage.setItem('trendoraPendingAuth',JSON.stringify({
+      mode:'reset',
+      email:e
+    }));
+
+    openAuthModal('reset',e);
+
+  }catch(err){
+    msg('loginMsg',err.message);
+  }
 };
 changePasswordV6=async function(){
   const current=prompt('Current password:');
