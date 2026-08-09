@@ -4,10 +4,6 @@
     {
       "src": "server.js",
       "use": "@vercel/node"
-    },
-    {
-      "src": "manifest.json",
-      "use": "@vercel/static"
     }
   ],
   "routes": [
@@ -17,7 +13,7 @@
     },
     {
       "src": "/manifest.json",
-      "dest": "manifest.json"
+      "dest": "server.js"
     },
     {
       "src": "/(.*)",
