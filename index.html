@@ -1152,28 +1152,5 @@ window.addEventListener('focus', restorePendingAuth);
   background:#fff;
 }
 </style>
-  <script>
-window.addEventListener('message', function(event) {
-
-  if (!event.data) return;
-
-  if (event.data.type === 'TRENDORA_NEXT') {
-    nextStep();
-  }
-
-  if (event.data.type === 'TRENDORA_PREVIOUS') {
-    prevStep();
-  }
-
-  if (event.data.type === 'TRENDORA_DONE') {
-    markCurrentDone();
-  }
-
-  if (event.data.type === 'TRENDORA_RESET') {
-    resetStep();
-  }
-
-});
-  </script>
 </body>
 </html>
