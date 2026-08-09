@@ -363,20 +363,12 @@ function openSite(){
       throw new Error();
     }
 
-    const browser=document.getElementById('internalBrowser');
-    const frame=document.getElementById('internalBrowserFrame');
-    const title=document.getElementById('internalBrowserTitle');
-
-    title.textContent=data[current].title || 'Website';
-    frame.src=url.href;
-
-    browser.classList.remove('hidden');
+    window.open(url.href, '_blank');
 
   }catch(e){
     alert('Please enter a valid website URL in Settings.');
   }
-}
-
+  }
 function closeInternalBrowser(){
   const browser=document.getElementById('internalBrowser');
   const frame=document.getElementById('internalBrowserFrame');
