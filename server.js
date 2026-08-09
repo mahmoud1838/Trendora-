@@ -11,6 +11,7 @@ const { createClient } = require('@supabase/supabase-js');
 const app = express();
 app.use(express.static(__dirname));
 app.get('/manifest.json', (req, res) => {
+  res.status(200);
   res.type('application/manifest+json');
   res.send({
     background_color: "#ffffff",
