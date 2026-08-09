@@ -1,18 +1,23 @@
 {
-  "background_color": "#ffffff",
-  "dir": "ltr",
-  "display": "standalone",
+  "manifest_version": 3,
   "name": "Trendora Workflow",
-  "orientation": "any",
-  "scope": "/",
-  "short_name": "Trendora",
-  "start_url": "/",
-  "theme_color": "#ffffff",
-  "id": "/",
-  "description": "Trendora helps affiliate marketers manage the entire product workflow — from sourcing and preparing products for Easy Order to creating marketing media and tracking customer delivery.",
-  "lang": "en",
-  "display_override": [
-    "window-controls-overlay",
-    "standalone"
+  "version": "1.0.0",
+  "description": "Workflow controls for Trendora.",
+  "permissions": [
+    "storage"
+  ],
+  "host_permissions": [
+    "*://*/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "*://*/*"
+      ],
+      "js": [
+        "content.js"
+      ],
+      "run_at": "document_idle"
+    }
   ]
 }
