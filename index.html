@@ -362,7 +362,6 @@ function openSite(){
     const title=document.getElementById('internalBrowserTitle');
 
     title.textContent=data[current].title || 'Website';
-
     frame.src=url.href;
 
     browser.classList.remove('hidden');
@@ -372,6 +371,13 @@ function openSite(){
   }
 }
 
+function closeInternalBrowser(){
+  const browser=document.getElementById('internalBrowser');
+  const frame=document.getElementById('internalBrowserFrame');
+
+  frame.src='about:blank';
+  browser.classList.add('hidden');
+}
 function closeInternalBrowser(){
   const browser=document.getElementById('internalBrowser');
   const frame=document.getElementById('internalBrowserFrame');
