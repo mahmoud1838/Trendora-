@@ -1,0 +1,806 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Trendora Workflow</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f4f6fb;color:#182033;font-family:Arial,sans-serif}
+.wrap{max-width:760px;margin:0 auto;padding:28px 18px 60px}.card{background:#fff;border-radius:28px;padding:30px;box-shadow:0 8px 30px #17203312;margin-top:22px}
+h1{font-size:38px;margin:0 0 10px}h2{font-size:30px;margin:0 0 20px}.sub{color:#687182;font-size:18px;margin-bottom:28px}
+label{display:block;font-weight:700;margin:16px 0 8px}input,textarea,select{width:100%;padding:16px;border:1px solid #d8dce5;border-radius:16px;font-size:17px;background:#fff}textarea{min-height:120px;resize:vertical}
+.pass-wrap{display:flex;gap:8px;align-items:stretch}
+.pass-wrap input{flex:1;min-width:0}
+.pass-toggle{flex:0 0 auto!important;background:#eef2f8!important;color:#24447e!important}
+
+button{border:0;border-radius:16px;padding:15px 22px;font-size:17px;font-weight:700;cursor:pointer;background:#e9eefb;color:#24447e}
+button.primary{background:#2867df;color:#fff}button.danger{background:#e52b2b;color:#fff}.row{display:flex;gap:10px;flex-wrap:wrap}.nav{display:flex;gap:10px;flex-wrap:wrap}.nav button{border-radius:14px}.hidden{display:none!important}.error{background:#ffe9e9;color:#a32626;padding:13px 16px;border-radius:14px;margin-bottom:18px}.ok{background:#e9f8ee;color:#176b35;padding:13px 16px;border-radius:14px;margin-bottom:18px}
+.locked{background:#f7f8fa;color:#202636}.small{color:#6d7482;font-size:14px}.step{font-size:20px;font-weight:700;margin-bottom:8px}
+.settings-grid{display:grid;gap:18px}.setting{border:1px solid #e0e3e9;padding:18px;border-radius:18px}.setting h3{margin:0 0 10px}
+.step-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.step-actions button{padding:10px 14px;font-size:14px}
+.settings-toolbar{margin-bottom:14px}
+.search{margin:8px 0 18px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:20px}
+.profile-hero{margin:-10px -10px 22px}.profile-cover{height:170px;border-radius:18px 18px 0 0;background:linear-gradient(135deg,#dfe7f5,#f7f9fc);background-size:cover;background-position:center}
+.profile-row{display:flex;align-items:center;gap:16px;padding:0 18px 8px;position:relative}.profile-avatar{width:86px;height:86px;border-radius:50%;object-fit:cover;background:#e8edf5;border:5px solid #fff;box-shadow:0 4px 16px rgba(0,0,0,.12);margin-top:-43px}.profile-avatar.large{width:110px;height:110px}.profile-info{flex:1}.profile-info h2{margin:0}.profile-editor{margin-bottom:20px}.preview-cover{height:190px}.profile-editor-avatar{margin:-55px 0 0 22px;position:relative}.profile-editor-avatar img{border-color:#fff}
+
+.stat{padding:16px;border-radius:16px;background:#f4f6fb;text-align:center}
+.stat strong{display:block;font-size:26px}
+.status-badge{display:inline-block;padding:5px 10px;border-radius:999px;font-size:13px;font-weight:700;background:#eef2f8}
+@media(max-width:520px){.stats{grid-template-columns:1fr}}
+.step-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.step-actions button{padding:10px 14px;font-size:14px}
+@media(max-width:520px){.card{padding:22px}h1{font-size:31px}.row button{flex:1}}
+
+.auth-modal{position:fixed;inset:0;background:rgba(12,18,30,.55);display:flex;align-items:center;justify-content:center;padding:18px;z-index:9999}
+.auth-modal.hidden{display:none}.auth-modal-box{width:min(460px,100%);background:#fff;border-radius:24px;padding:28px;box-shadow:0 25px 80px rgba(0,0,0,.22)}
+.auth-modal-box h2{margin:0 0 8px}.auth-modal-box .sub{margin-bottom:20px}
+.code-input{display:flex;gap:8px;justify-content:center;margin:18px 0}.code-input input{width:48px;height:58px;text-align:center;font-size:24px;font-weight:700;padding:0}
+.countdown{text-align:center;margin:10px 0;font-size:14px}.modal-actions{display:flex;gap:10px;flex-wrap:wrap}.modal-actions button{flex:1}
+.profile-cover{background-size:cover;background-position:center}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<section id="auth">
+  <div class="card" id="loginCard">
+    <h1>Trendora Workflow</h1><div class="sub">Local account • No server required</div>
+    <div id="loginMsg"></div>
+    <label>Email</label><input id="loginEmail" type="email" placeholder="you@example.com">
+    <label>Password</label>
+    <div class="pass-wrap">
+      <input id="loginPass" type="password" placeholder="Password">
+      <button type="button" class="pass-toggle" onclick="togglePassword('loginPass',this)">Show</button>
+    </div>
+    <div class="row" style="margin-top:18px">
+      <button class="primary" onclick="signIn()">Sign In</button>
+      <button onclick="showSignup()">Create New Account</button>
+      <button type="button" onclick="forgotPassword()">Forgot Password?</button>
+    </div>
+    <p class="small">Your account is stored locally on this device.</p>
+  </div>
+
+  <div class="card hidden" id="signupCard">
+    <h1>Create New Account</h1><div class="sub">Create your local Trendora account</div>
+    <div id="signupMsg"></div>
+    <label>First Name</label><input id="firstName" type="text" placeholder="First name">
+    <label>Last Name</label><input id="lastName" type="text" placeholder="Last name">
+    <label>Email</label><input id="signupEmail" type="email" placeholder="you@example.com">
+    <label>Password</label>
+    <div class="pass-wrap">
+      <input id="signupPass" type="password" placeholder="Password">
+      <button type="button" class="pass-toggle" onclick="togglePassword('signupPass',this)">Show</button>
+    </div>
+    <label>Confirm Password</label>
+    <div class="pass-wrap">
+      <input id="signupConfirm" type="password" placeholder="Confirm password">
+      <button type="button" class="pass-toggle" onclick="togglePassword('signupConfirm',this)">Show</button>
+    </div>
+    <div class="row" style="margin-top:18px">
+      <button class="primary" onclick="createAccount()">Create Account</button>
+      <button onclick="showLogin()">Back to Sign In</button>
+    </div>
+  </div>
+</section>
+
+<section id="app" class="hidden">
+  <div class="nav">
+    <button class="primary" onclick="showPage('dashboard')">Dashboard</button>
+    <button onclick="showPage('workflow')">Workflow</button>
+    <button onclick="showPage('settings')">Settings</button>
+      <button onclick="openProfile()">Profile</button>
+    <button class="danger" onclick="logout()">Logout</button>
+  </div>
+
+  <div id="dashboard" class="card">
+    <div class="profile-hero">
+      <div id="dashboardCover" class="profile-cover"></div>
+      <div class="profile-row">
+        <img id="dashboardAvatar" class="profile-avatar" alt="Profile">
+        <div class="profile-info">
+          <h2 id="profileName">User</h2>
+          <div class="sub" id="welcome"></div>
+        </div>
+        <button type="button" onclick="openProfile()">✏️ Edit Profile</button>
+      </div>
+    </div>
+    <div class="row">
+      <button class="primary" onclick="showPage('workflow')">Start Workflow</button>
+      <button onclick="showPage('settings')">Manage Steps</button>
+    </div>
+    <div id="dashboardStats" class="stats"></div>
+  </div>
+
+  <div id="workflow" class="card hidden">
+    <div class="step" id="stepNo"></div>
+    <h2 id="stepTitle"></h2>
+    <label>Website for this step</label>
+    <input id="siteDisplay" class="locked" readonly>
+    <label>Title</label>
+    <input id="titleDisplay" class="locked" readonly>
+    <label>Description</label>
+    <textarea id="descDisplay" class="locked" readonly></textarea>
+    <label>Status</label>
+    <select id="statusDisplay" onchange="setCurrentStatus(this.value)">
+      <option value="todo">Not Started</option>
+      <option value="progress">In Progress</option>
+      <option value="done">Done</option>
+    </select>
+    <div class="row" style="margin-top:18px">
+      <button class="primary" onclick="openSite()">OPEN</button>
+      <button onclick="prevStep()">Previous</button>
+      <button class="primary" onclick="nextStep()">Next</button>
+      <button onclick="resetStep()">Reset</button>
+      <button onclick="markCurrentDone()">✓ Mark Done</button>
+    </div>
+    <p class="small">Website, title and description are editable from Settings. You can add or remove as many steps as you need.</p>
+  </div>
+
+  <div id="profile" class="card hidden">
+    <h2>Edit Profile</h2>
+    <div class="sub">Change your name, profile picture, and cover photo. Everything is saved on this device.</div>
+    <div class="profile-editor">
+      <div id="profileCoverPreview" class="profile-cover preview-cover"></div>
+      <div class="profile-editor-avatar">
+        <img id="profileAvatarPreview" class="profile-avatar large" alt="Profile">
+      </div>
+    </div>
+    <label>First Name</label>
+    <input id="profileFirst" type="text" placeholder="First name">
+    <label>Last Name</label>
+    <input id="profileLast" type="text" placeholder="Last name">
+    <label>Profile Picture</label>
+    <input id="profileImageFile" type="file" accept="image/*" onchange="previewProfileImage(event)">
+    <label>Cover Photo</label>
+    <input id="coverImageFile" type="file" accept="image/*" onchange="previewCoverImage(event)">
+    <div class="row" style="margin-top:18px">
+      <button class="primary" type="button" onclick="saveProfile()">💾 Save Profile</button>
+      <button type="button" onclick="showPage('dashboard')">Cancel</button>
+    </div>
+    <div id="profileMsg" style="margin-top:14px"></div>
+  </div>
+  
+<div id="securityPanel" class="card" style="margin-top:18px">
+  <h3>Security</h3>
+  <div class="sub">Change your password anytime. A verification code is required for email verification and password recovery.</div>
+  <button type="button" onclick="changePasswordV6()">🔐 Change Password</button>
+</div>
+<div id="settings" class="card hidden">
+    <h2>Workflow Settings</h2>
+    <div class="sub">Add, edit, duplicate, reorder, search, import, export, and manage your workflow steps.</div>
+    <div class="row settings-toolbar">
+      <button class="primary" type="button" onclick="addStep()">+ Add Step</button>
+      <button type="button" onclick="saveSettings()">💾 Save</button>
+      <button type="button" onclick="exportWorkflow()">📤 Export</button>
+      <button type="button" onclick="document.getElementById('importFile').click()">📥 Import</button>
+      <button type="button" onclick="resetWorkflow()">↩ Reset Original</button>
+      <input id="importFile" type="file" accept=".json,application/json" style="display:none" onchange="importWorkflow(event)">
+    </div>
+    <input id="stepSearch" class="search" type="search" placeholder="🔎 Search steps by number, title, description, or website..." oninput="renderSettings()">
+    <div id="settingsList" class="settings-grid"></div>
+    <div id="settingsMsg" style="margin-top:14px"></div>
+  </div>
+</section>
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+
+const defaultSites=[
+"https://www.facebook.com/","https://www.instagram.com/","https://www.tiktok.com/","https://www.youtube.com/",
+"https://www.linkedin.com/","https://x.com/","https://www.reddit.com/","https://www.pinterest.com/",
+"https://www.google.com/","https://www.gmail.com/","https://drive.google.com/","https://docs.google.com/",
+"https://www.canva.com/","https://www.figma.com/","https://www.notion.so/","https://trello.com/",
+"https://slack.com/","https://discord.com/","https://github.com/","https://gitlab.com/",
+"https://www.shopify.com/","https://www.amazon.com/","https://www.ebay.com/","https://www.etsy.com/",
+"https://www.paypal.com/","https://stripe.com/","https://www.zoom.com/","https://www.dropbox.com/",
+"https://www.microsoft.com/","https://www.office.com/","https://outlook.live.com/","https://www.apple.com/",
+"https://www.adobe.com/","https://www.behance.net/","https://dribbble.com/","https://medium.com/",
+"https://wordpress.com/","https://www.wix.com/","https://www.weebly.com/","https://www.quora.com/",
+"https://www.wikipedia.org/"
+];
+
+let data=JSON.parse(localStorage.getItem('trendoraSettings')||'null');
+if(!Array.isArray(data) || data.length===0){
+  data=defaultSites.map((site,i)=>({
+    site:site,
+    title:"Step "+(i+1),
+    desc:"Description for step "+(i+1),
+    status:"todo"
+  }));
+}
+data=data.map((d,i)=>({site:d.site||"https://example.com/",title:d.title||"Step "+(i+1),desc:d.desc||"",status:d.status||"todo"}));
+let current=Number(localStorage.getItem('trendoraCurrentStep')||0);
+let autoSaveTimer=null;
+
+function getStepCount(){return data.length;}
+function persist(){
+  clearTimeout(autoSaveTimer);
+  localStorage.setItem('trendoraSettings',JSON.stringify(data));
+  localStorage.setItem('trendoraCurrentStep',String(current));
+}
+function autoSave(){
+  clearTimeout(autoSaveTimer);
+  autoSaveTimer=setTimeout(persist,250);
+}
+function msg(id,text,type='error'){
+  const el=$(id);
+  if(el) el.innerHTML='<div class="'+type+'">'+esc(text)+'</div>';
+}
+function showSignup(){
+  $('loginCard').classList.add('hidden');
+  $('signupCard').classList.remove('hidden');
+  $('loginMsg').innerHTML='';
+}
+function showLogin(){
+  $('signupCard').classList.add('hidden');
+  $('loginCard').classList.remove('hidden');
+  $('signupMsg').innerHTML='';
+}
+function togglePassword(id,btn){
+  const input=$(id);
+  input.type=input.type==='password'?'text':'password';
+  btn.textContent=input.type==='password'?'Show':'Hide';
+}
+function createAccount(){
+  const f=$('firstName').value.trim(),l=$('lastName').value.trim();
+  const e=$('signupEmail').value.trim().toLowerCase(),p=$('signupPass').value,c=$('signupConfirm').value;
+  if(!f||!l)return msg('signupMsg','Please enter first and last name.');
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e))return msg('signupMsg','Enter a valid email.');
+  if(p.length<6)return msg('signupMsg','Password must be at least 6 characters.');
+  if(p!==c)return msg('signupMsg','Passwords do not match.');
+  const old=JSON.parse(localStorage.getItem('trendoraAccount')||'null');
+  if(old&&old.email===e)return msg('signupMsg','An account with this email already exists.');
+  localStorage.setItem('trendoraAccount',JSON.stringify({first:f,last:l,email:e,password:p}));
+  msg('signupMsg','Account created successfully. You can sign in now.','ok');
+  setTimeout(showLogin,700);
+}
+function signIn(){
+  const a=JSON.parse(localStorage.getItem('trendoraAccount')||'null');
+  const e=$('loginEmail').value.trim().toLowerCase(),p=$('loginPass').value;
+  if(!a)return msg('loginMsg','No account found. Tap Create New Account first.');
+  if(e!==a.email||p!==a.password)return msg('loginMsg','Incorrect email or password.');
+  localStorage.setItem('trendoraLogged','1');
+  startApp();
+}
+function forgotPassword(){
+  const a=JSON.parse(localStorage.getItem('trendoraAccount')||'null');
+  if(!a)return msg('loginMsg','No local account exists yet. Create an account first.');
+  const e=$('loginEmail').value.trim().toLowerCase();
+  if(!e)return msg('loginMsg','Enter your account email first.');
+  if(e!==a.email)return msg('loginMsg','This email does not match the saved local account.');
+  msg('loginMsg','This is a local-only account, so there is no email reset service.','ok');
+}
+function logout(){
+  localStorage.removeItem('trendoraLogged');
+  $('app').classList.add('hidden');
+  $('auth').classList.remove('hidden');
+  showLogin();
+}
+function startApp(){
+  $('auth').classList.add('hidden');
+  $('app').classList.remove('hidden');
+  const a=JSON.parse(localStorage.getItem('trendoraAccount')||'{}');
+  $('welcome').textContent='Welcome, '+(a.first||'User')+'!';
+  renderSettings();
+  renderStep();
+  renderDashboard();
+  renderProfileUI();
+  showPage('dashboard');
+}
+function showPage(p){
+  ['dashboard','workflow','settings','profile'].forEach(x=>$(x).classList.toggle('hidden',x!==p));
+  if(p==='settings')renderSettings();
+  if(p==='workflow')renderStep();
+  if(p==='dashboard'){renderDashboard();renderProfileUI();}
+  if(p==='profile')renderProfileUI();
+}
+function statusLabel(s){
+  return s==='done'?'Done':s==='progress'?'In Progress':'Not Started';
+}
+function renderStep(){
+  const count=getStepCount();
+  if(count===0){
+    $('stepNo').textContent='No steps';
+    $('stepTitle').textContent='No workflow steps yet';
+    $('siteDisplay').value='';$('titleDisplay').value='';$('descDisplay').value='';
+    return;
+  }
+  if(current>=count)current=count-1;
+  if(current<0)current=0;
+  const d=data[current];
+  $('stepNo').textContent='Step '+(current+1)+' / '+count;
+  $('stepTitle').textContent=d.title||('Step '+(current+1));
+  $('siteDisplay').value=d.site||'';
+  $('titleDisplay').value=d.title||'';
+  $('descDisplay').value=d.desc||'';
+  $('statusDisplay').value=d.status||'todo';
+  localStorage.setItem('trendoraCurrentStep',String(current));
+}
+function nextStep(){if(current<getStepCount()-1){current++;renderStep();autoSave();}}
+function prevStep(){if(current>0){current--;renderStep();autoSave();}}
+function resetStep(){current=0;renderStep();autoSave();}
+function setCurrentStatus(value){
+  if(!data[current])return;
+  data[current].status=value;
+  autoSave();
+  renderDashboard();
+}
+function markCurrentDone(){
+  if(!data[current])return;
+  data[current].status='done';
+  renderStep();renderDashboard();autoSave();
+}
+function openSite(){
+  if(!getStepCount())return alert('Add a workflow step first.');
+  let u=(data[current].site||'').trim();
+  if(!u)return alert('Add a website URL for this step in Settings.');
+  if(!/^https?:\/\//i.test(u))u='https://'+u;
+  try{
+    const url=new URL(u);
+    if(url.protocol!=='http:'&&url.protocol!=='https:')throw new Error();
+    window.open(url.href,'_blank','noopener,noreferrer');
+  }catch(e){alert('Please enter a valid website URL in Settings.');}
+}
+function addStep(){
+  const n=data.length+1;
+  data.push({site:'https://example.com/',title:'Step '+n,desc:'Description for step '+n,status:'todo'});
+  current=data.length-1;
+  persist();renderSettings();renderStep();renderDashboard();
+  msg('settingsMsg','Step '+n+' added successfully.','ok');
+}
+function duplicateStep(i){
+  const copy={...data[i],title:(data[i].title||('Step '+(i+1)))+' Copy',status:'todo'};
+  data.splice(i+1,0,copy);
+  current=i+1;
+  persist();renderSettings();renderStep();renderDashboard();
+  msg('settingsMsg','Step duplicated.','ok');
+}
+function deleteStep(i){
+  if(data.length<=1)return msg('settingsMsg','You must keep at least one workflow step.');
+  const title=data[i].title||('Step '+(i+1));
+  if(!confirm('Delete "'+title+'"?'))return;
+  data.splice(i,1);
+  if(current>=data.length)current=data.length-1;
+  persist();renderSettings();renderStep();renderDashboard();
+  msg('settingsMsg','Step deleted.','ok');
+}
+function moveStep(i,direction){
+  const target=i+direction;
+  if(target<0||target>=data.length)return;
+  [data[i],data[target]]=[data[target],data[i]];
+  current=target;
+  persist();renderSettings();renderStep();
+}
+function renderSettings(){
+  const list=$('settingsList'),q=($('stepSearch').value||'').trim().toLowerCase();
+  list.innerHTML='';
+  data.forEach((d,i)=>{
+    const hay=[i+1,d.site,d.title,d.desc,statusLabel(d.status)].join(' ').toLowerCase();
+    if(q&&!hay.includes(q))return;
+    const el=document.createElement('div');
+    el.className='setting';
+    el.innerHTML=
+      '<h3>Step '+(i+1)+' <span class="status-badge">'+statusLabel(d.status)+'</span></h3>'+
+      '<label>Website URL</label><input data-k="site" data-i="'+i+'">'+
+      '<label>Title</label><input data-k="title" data-i="'+i+'">'+
+      '<label>Description</label><textarea data-k="desc" data-i="'+i+'"></textarea>'+
+      '<label>Status</label><select data-k="status" data-i="'+i+'"><option value="todo">Not Started</option><option value="progress">In Progress</option><option value="done">Done</option></select>'+
+      '<div class="step-actions">'+
+      '<button type="button" onclick="moveStep('+i+',-1)" '+(i===0?'disabled':'')+'>↑ Up</button>'+
+      '<button type="button" onclick="moveStep('+i+',1)" '+(i===data.length-1?'disabled':'')+'>↓ Down</button>'+
+      '<button type="button" onclick="duplicateStep('+i+')">📋 Duplicate</button>'+
+      '<button type="button" class="danger" onclick="deleteStep('+i+')">Delete</button>'+
+      '</div>';
+    el.querySelector('[data-k="site"]').value=d.site||'';
+    el.querySelector('[data-k="title"]').value=d.title||'';
+    el.querySelector('[data-k="desc"]').value=d.desc||'';
+    el.querySelector('[data-k="status"]').value=d.status||'todo';
+    list.appendChild(el);
+  });
+}
+function saveSettings(){
+  document.querySelectorAll('#settingsList [data-k]').forEach(x=>{
+    data[+x.dataset.i][x.dataset.k]=x.value;
+  });
+  persist();renderStep();renderSettings();renderDashboard();
+  msg('settingsMsg','All changes saved successfully.','ok');
+}
+function getProfile(){
+  const a=JSON.parse(localStorage.getItem('trendoraAccount')||'{}');
+  return {
+    first:a.first||'User',
+    last:a.last||'',
+    email:a.email||'',
+    password:a.password||'',
+    avatar:a.avatar||'',
+    cover:a.cover||''
+  };
+}
+function openProfile(){
+  const p=getProfile();
+  $('profileFirst').value=p.first;
+  $('profileLast').value=p.last;
+  $('profileAvatarPreview').src=p.avatar||makeAvatar(p.first+' '+p.last);
+  $('profileCoverPreview').style.backgroundImage=p.cover?'url("'+p.cover+'")':'';
+  $('profileCoverPreview').style.backgroundColor=p.cover?'':'#e8edf5';
+  showPage('profile');
+}
+function previewProfileImage(event){
+  const file=event.target.files&&event.target.files[0];
+  if(!file)return;
+  const reader=new FileReader();
+  reader.onload=()=>{$('profileAvatarPreview').src=reader.result;};
+  reader.readAsDataURL(file);
+}
+function previewCoverImage(event){
+  const file=event.target.files&&event.target.files[0];
+  if(!file)return;
+  const reader=new FileReader();
+  reader.onload=()=>{
+    $('profileCoverPreview').style.backgroundImage='url("'+reader.result+'")';
+    $('profileCoverPreview').style.backgroundColor='';
+  };
+  reader.readAsDataURL(file);
+}
+function saveProfile(){
+  const first=$('profileFirst').value.trim(),last=$('profileLast').value.trim();
+  if(!first)return msg('profileMsg','Please enter your first name.');
+  const account=JSON.parse(localStorage.getItem('trendoraAccount')||'{}');
+  account.first=first;account.last=last;
+  const avatarInput=$('profileImageFile'),coverInput=$('coverImageFile');
+  const save=()=>{localStorage.setItem('trendoraAccount',JSON.stringify(account));renderProfileUI();showPage('dashboard');};
+  const readCover=()=>{
+    if(coverInput.files&&coverInput.files[0]){
+      const r=new FileReader();r.onload=()=>{account.cover=r.result;save();};r.readAsDataURL(coverInput.files[0]);
+    }else save();
+  };
+  if(avatarInput.files&&avatarInput.files[0]){
+    const r=new FileReader();r.onload=()=>{account.avatar=r.result;readCover();};r.readAsDataURL(avatarInput.files[0]);
+  }else readCover();
+}
+function makeAvatar(name){
+  const letter=(name||'U').trim().charAt(0).toUpperCase();
+  const svg='<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200"><rect width="100%" height="100%" fill="#e8edf5"/><text x="50%" y="56%" text-anchor="middle" font-size="96" font-family="Arial" fill="#334d7d">'+letter+'</text></svg>';
+  return 'data:image/svg+xml;charset=UTF-8,'+encodeURIComponent(svg);
+}
+function renderProfileUI(){
+  const p=getProfile(),name=(p.first+' '+p.last).trim()||'User';
+  $('profileName').textContent=name;
+  $('welcome').textContent='Welcome, '+p.first+'!';
+  $('dashboardAvatar').src=p.avatar||makeAvatar(name);
+  $('dashboardCover').style.backgroundImage=p.cover?'url("'+p.cover+'")':'';
+  $('dashboardCover').style.backgroundColor=p.cover?'':'#e8edf5';
+}
+function renderDashboard(){
+  const total=data.length,done=data.filter(x=>x.status==='done').length,progress=data.filter(x=>x.status==='progress').length;
+  $('dashboardStats').innerHTML=
+    '<div class="stat"><strong>'+total+'</strong>Steps</div>'+
+    '<div class="stat"><strong>'+done+'</strong>Done</div>'+
+    '<div class="stat"><strong>'+progress+'</strong>In Progress</div>';
+}
+function exportWorkflow(){
+  persist();
+  const payload={app:'Trendora Workflow',version:4,exportedAt:new Date().toISOString(),steps:data};
+  const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});
+  const url=URL.createObjectURL(blob),a=document.createElement('a');
+  a.href=url;a.download='trendora-workflow-backup.json';a.click();
+  setTimeout(()=>URL.revokeObjectURL(url),500);
+  msg('settingsMsg','Backup exported successfully.','ok');
+}
+function importWorkflow(event){
+  const file=event.target.files&&event.target.files[0];
+  if(!file)return;
+  const reader=new FileReader();
+  reader.onload=()=>{
+    try{
+      const parsed=JSON.parse(reader.result);
+      const incoming=Array.isArray(parsed)?parsed:parsed.steps;
+      if(!Array.isArray(incoming)||!incoming.length)throw new Error();
+      if(!confirm('Import '+incoming.length+' steps and replace your current workflow?'))return;
+      data=incoming.map((d,i)=>({
+        site:String(d.site||'https://example.com/'),
+        title:String(d.title||'Step '+(i+1)),
+        desc:String(d.desc||''),
+        status:['todo','progress','done'].includes(d.status)?d.status:'todo'
+      }));
+      current=0;persist();renderSettings();renderStep();renderDashboard();
+      msg('settingsMsg','Workflow imported successfully.','ok');
+    }catch(e){msg('settingsMsg','Invalid Trendora backup file.');}
+    event.target.value='';
+  };
+  reader.readAsText(file);
+}
+function resetWorkflow(){
+  if(!confirm('Reset the workflow to the original steps? Your current custom steps will be replaced.'))return;
+  data=defaultSites.map((site,i)=>({site,title:'Step '+(i+1),desc:'Description for step '+(i+1),status:'todo'}));
+  current=0;persist();renderSettings();renderStep();renderDashboard();
+  msg('settingsMsg','Original workflow restored.','ok');
+}
+function esc(s){
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
+}
+if(localStorage.getItem('trendoraLogged')==='1')startApp();
+</script>
+
+<script>
+/* Trendora V6 real authentication bridge */
+const API_BASE = '';
+let trendoraToken = localStorage.getItem('trendoraAuthToken') || '';
+
+async function api(path, options={}) {
+  const headers = {'Content-Type':'application/json', ...(options.headers||{})};
+  if (trendoraToken) headers.Authorization = 'Bearer '+trendoraToken;
+  const res = await fetch(API_BASE+path, {...options, headers});
+  const body = await res.json().catch(()=>({}));
+  if (!res.ok) throw new Error(body.error || 'Request failed');
+  return body;
+}
+async function createAccountV6(){
+  const f=$('firstName').value.trim(), l=$('lastName').value.trim();
+  const e=$('signupEmail').value.trim().toLowerCase(), p=$('signupPass').value, c=$('signupConfirm').value;
+  if(!f||!l)return msg('signupMsg','Please enter first and last name.');
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e))return msg('signupMsg','Enter a valid email.');
+  if(p.length<8)return msg('signupMsg','Password must be at least 8 characters.');
+  if(p!==c)return msg('signupMsg','Passwords do not match.');
+  try {
+    const r=await api('/api/auth/register',{method:'POST',body:JSON.stringify({firstName:f,lastName:l,email:e,password:p})});
+    msg('signupMsg','Account created. Check your email for the verification code.','ok');
+    showVerification('signup', e);
+  } catch(err){ msg('signupMsg',err.message); }
+}
+async function signInV6(){
+  const e=$('loginEmail').value.trim().toLowerCase(), p=$('loginPass').value;
+  try {
+    const r=await api('/api/auth/login',{method:'POST',body:JSON.stringify({email:e,password:p})});
+    if(r.requiresVerification){ msg('loginMsg','Please verify your email first.','error'); showVerification('login',e); return; }
+    trendoraToken=r.token; localStorage.setItem('trendoraAuthToken',trendoraToken);
+    const me=await api('/api/me');
+    applyRemoteAccount(me.user);
+    startApp();
+  } catch(err){ msg('loginMsg',err.message); }
+}
+function showVerification(mode,email){
+  const code=prompt('Enter the 6-digit verification code sent to '+email);
+  if(code===null)return;
+  verifyEmailCode(email,code);
+}
+async function verifyEmailCode(email,code){
+  try {
+    const r=await api('/api/auth/verify-email',{method:'POST',body:JSON.stringify({email,code})});
+    if(r.token){ trendoraToken=r.token; localStorage.setItem('trendoraAuthToken',trendoraToken); }
+    msg('signupMsg','Email verified successfully. You can sign in now.','ok');
+    msg('loginMsg','Email verified successfully.','ok');
+  } catch(err){ msg('signupMsg',err.message); msg('loginMsg',err.message); }
+}
+async function requestPasswordReset(){
+  const e=$('loginEmail').value.trim().toLowerCase();
+  if(!e)return msg('loginMsg','Enter your email first.');
+  try{
+    await api('/api/auth/request-reset',{method:'POST',body:JSON.stringify({email:e})});
+    const code=prompt('Enter the 6-digit password reset code sent to '+e);
+    if(code===null)return;
+    const newPass=prompt('Enter your new password (8+ characters):');
+    if(!newPass)return;
+    const confirmPass=prompt('Confirm your new password:');
+    if(newPass!==confirmPass)return msg('loginMsg','Passwords do not match.');
+    await api('/api/auth/reset-password',{method:'POST',body:JSON.stringify({email:e,code,newPassword:newPass})});
+    msg('loginMsg','Password changed successfully. You can sign in now.','ok');
+  }catch(err){msg('loginMsg',err.message);}
+}
+async function changePasswordV6(){
+  const current=prompt('Current password:');
+  if(current===null)return;
+  const next=prompt('New password (8+ characters):');
+  if(!next)return;
+  const confirmNext=prompt('Confirm new password:');
+  if(next!==confirmNext)return alert('Passwords do not match.');
+  try{
+    await api('/api/auth/change-password',{method:'POST',body:JSON.stringify({currentPassword:current,newPassword:next})});
+    alert('Password changed successfully.');
+  }catch(err){alert(err.message);}
+}
+async function logoutV6(){
+  try{await api('/api/auth/logout',{method:'POST'});}catch(e){}
+  trendoraToken='';localStorage.removeItem('trendoraAuthToken');logout();
+}
+function applyRemoteAccount(u){
+  const a=JSON.parse(localStorage.getItem('trendoraAccount')||'{}');
+  a.first=u.firstName;a.last=u.lastName;a.email=u.email;
+  localStorage.setItem('trendoraAccount',JSON.stringify(a));
+}
+</script>
+
+<script>
+/* V6 overrides */
+const _oldShowPage = showPage;
+showPage = function(p){
+  _oldShowPage(p);
+  if(p==='profile'){
+    const security=document.getElementById('securityPanel');
+    if(security) security.classList.remove('hidden');
+  }
+};
+const _oldCreateAccount=createAccount; createAccount=createAccountV6;
+const _oldSignIn=signIn; signIn=signInV6;
+const _oldLogout=logout; logout=logoutV6;
+forgotPassword=requestPasswordReset;
+</script>
+
+<div id="authModal" class="auth-modal hidden">
+  <div class="auth-modal-box">
+    <h2 id="authModalTitle">Verify your email</h2>
+    <div id="authModalSub" class="sub"></div>
+    <div id="resetPasswordFields" class="hidden">
+      <label>New Password</label>
+      <input id="resetNewPassword" type="password" minlength="8" placeholder="At least 8 characters">
+      <label>Confirm Password</label>
+      <input id="resetConfirmPassword" type="password" minlength="8" placeholder="Repeat password">
+    </div>
+    <div id="codeFields">
+      <label>Verification Code</label>
+      <div class="code-input">
+        <input maxlength="1" inputmode="numeric" class="code-digit">
+        <input maxlength="1" inputmode="numeric" class="code-digit">
+        <input maxlength="1" inputmode="numeric" class="code-digit">
+        <input maxlength="1" inputmode="numeric" class="code-digit">
+        <input maxlength="1" inputmode="numeric" class="code-digit">
+        <input maxlength="1" inputmode="numeric" class="code-digit">
+      </div>
+    </div>
+    <div id="authModalMsg"></div>
+    <div class="countdown" id="codeCountdown"></div>
+    <div class="modal-actions">
+      <button class="primary" id="authModalPrimary" type="button">Verify</button>
+      <button type="button" onclick="closeAuthModal()">Cancel</button>
+    </div>
+    <button id="resendCodeBtn" type="button" style="width:100%;margin-top:10px" onclick="resendCode()">Resend Code</button>
+  </div>
+</div>
+
+<script>
+let authModalState={mode:'',email:'',timer:null};
+function openAuthModal(mode,email){
+  authModalState={mode,email,timer:null};
+  $('authModal').classList.remove('hidden');
+  $('authModalMsg').innerHTML='';
+  $('codeFields').classList.remove('hidden');
+  $('resetPasswordFields').classList.toggle('hidden',mode!=='reset');
+  $('authModalTitle').textContent=mode==='reset'?'Reset your password':'Verify your email';
+  $('authModalSub').textContent=(mode==='reset'?'We sent a password reset code to ':'We sent a verification code to ')+email;
+  $('authModalPrimary').textContent=mode==='reset'?'Reset Password':'Verify Email';
+  document.querySelectorAll('.code-digit').forEach(x=>x.value='');
+  document.querySelector('.code-digit').focus();
+  startCodeTimer(600);
+}
+function closeAuthModal(){
+  if(authModalState.timer)clearInterval(authModalState.timer);
+  $('authModal').classList.add('hidden');
+}
+function startCodeTimer(seconds){
+  let left=seconds;
+  clearInterval(authModalState.timer);
+  const tick=()=>{
+    const m=Math.floor(left/60),s=String(left%60).padStart(2,'0');
+    $('codeCountdown').textContent='Code expires in '+m+':'+s;
+    if(left<=0){clearInterval(authModalState.timer);$('codeCountdown').textContent='Code expired. Request a new one.';}
+    left--;
+  };
+  tick();authModalState.timer=setInterval(tick,1000);
+}
+function getModalCode(){return [...document.querySelectorAll('.code-digit')].map(x=>x.value).join('');}
+function modalMsg(t,type='error'){ $('authModalMsg').innerHTML='<div class="'+type+'">'+esc(t)+'</div>'; }
+document.addEventListener('input',e=>{
+  if(!e.target.classList.contains('code-digit'))return;
+  e.target.value=e.target.value.replace(/\D/g,'').slice(0,1);
+  if(e.target.value)e.target.nextElementSibling?.focus();
+});
+document.addEventListener('keydown',e=>{
+  if(!e.target.classList.contains('code-digit'))return;
+  if(e.key==='Backspace'&&!e.target.value)e.target.previousElementSibling?.focus();
+});
+async function verifyModal(){
+  const code=getModalCode();
+  if(!/^\d{6}$/.test(code))return modalMsg('Enter all 6 digits.');
+  try{
+    if(authModalState.mode==='reset'){
+      const p=$('resetNewPassword').value,c=$('resetConfirmPassword').value;
+      if(p.length<8)return modalMsg('Password must be at least 8 characters.');
+      if(p!==c)return modalMsg('Passwords do not match.');
+      await api('/api/auth/reset-password',{method:'POST',body:JSON.stringify({email:authModalState.email,code,newPassword:p})});
+      closeAuthModal();msg('loginMsg','Password changed successfully. You can sign in now.','ok');
+    }else{
+      const r=await api('/api/auth/verify-email',{method:'POST',body:JSON.stringify({email:authModalState.email,code})});
+      if(r.token){trendoraToken=r.token;localStorage.setItem('trendoraAuthToken',trendoraToken);}
+      closeAuthModal();msg('loginMsg','Email verified successfully. You can sign in now.','ok');msg('signupMsg','Email verified successfully. You can sign in now.','ok');
+    }
+  }catch(e){modalMsg(e.message);}
+}
+async function resendCode(){
+  try{
+    const purpose=authModalState.mode==='reset'?'request-reset':'resend-verification';
+    await api('/api/auth/'+purpose,{method:'POST',body:JSON.stringify({email:authModalState.email})});
+    modalMsg('A new code was sent.','ok');startCodeTimer(600);
+  }catch(e){modalMsg(e.message);}
+}
+document.getElementById('authModalPrimary').addEventListener('click',verifyModal);
+</script>
+
+<script>
+showVerification=function(mode,email){openAuthModal('verify',email);};
+requestPasswordReset=async function(){
+  const e=$('loginEmail').value.trim().toLowerCase();
+  if(!e)return msg('loginMsg','Enter your email first.');
+  try{await api('/api/auth/request-reset',{method:'POST',body:JSON.stringify({email:e})});openAuthModal('reset',e);}
+  catch(err){msg('loginMsg',err.message);}
+};
+changePasswordV6=async function(){
+  const current=prompt('Current password:');
+  if(current===null)return;
+  const next=prompt('New password (8+ characters):');
+  if(!next)return;
+  const confirmNext=prompt('Confirm new password:');
+  if(next!==confirmNext)return alert('Passwords do not match.');
+  try{
+    const r=await api('/api/auth/change-password',{method:'POST',body:JSON.stringify({currentPassword:current,newPassword:next})});
+    if(r.requiresCode){
+      alert('A verification code was sent to your email. Please use Forgot Password from the login screen to finish the change.');
+    }
+  }catch(err){alert(err.message);}
+};
+</script>
+
+<script>
+changePasswordV6=async function(){
+  const current=prompt('Current password:');
+  if(current===null)return;
+  const next=prompt('New password (8+ characters):');
+  if(!next)return;
+  const confirmNext=prompt('Confirm new password:');
+  if(next!==confirmNext)return alert('Passwords do not match.');
+  try{
+    const r=await api('/api/auth/change-password',{method:'POST',body:JSON.stringify({currentPassword:current,newPassword:next})});
+    if(r.requiresCode){
+      authModalState.pendingNewPassword=next;
+      authModalState.mode='change';
+      authModalState.email=getProfile().email;
+      $('authModal').classList.remove('hidden');
+      $('authModalMsg').innerHTML='';
+      $('codeFields').classList.remove('hidden');
+      $('resetPasswordFields').classList.add('hidden');
+      $('authModalTitle').textContent='Confirm password change';
+      $('authModalSub').textContent='Enter the code sent to '+authModalState.email;
+      $('authModalPrimary').textContent='Confirm Change';
+      document.querySelectorAll('.code-digit').forEach(x=>x.value='');
+      document.querySelector('.code-digit').focus();
+      startCodeTimer(600);
+    }
+  }catch(err){alert(err.message);}
+};
+const oldVerifyModal=verifyModal;
+verifyModal=async function(){
+  if(authModalState.mode!=='change')return oldVerifyModal();
+  const code=getModalCode();
+  if(!/^\d{6}$/.test(code))return modalMsg('Enter all 6 digits.');
+  try{
+    await api('/api/auth/confirm-change-password',{method:'POST',body:JSON.stringify({code,newPassword:authModalState.pendingNewPassword})});
+    closeAuthModal();alert('Password changed successfully.');
+  }catch(e){modalMsg(e.message);}
+};
+</script>
+
+<script>
+(function(){
+  if(location.protocol==='file:'){
+    window.addEventListener('DOMContentLoaded',function(){
+      const banner=document.createElement('div');
+      banner.style.cssText='position:fixed;left:12px;right:12px;bottom:12px;z-index:10000;padding:14px 16px;border-radius:14px;background:#fff3cd;color:#664d03;border:1px solid #ffecb5;font-family:Arial,sans-serif;box-shadow:0 8px 30px rgba(0,0,0,.12)';
+      banner.innerHTML='<b>Trendora needs its server.</b><br>Do not open index.html directly. Run <code>npm start</code> and open <b>http://localhost:3000</b>, or deploy the project online.';
+      document.body.appendChild(banner);
+    });
+  }
+})();
+</script>
+</body>
+</html>
