@@ -7,6 +7,10 @@ const jwt=require('jsonwebtoken');
 const bcrypt=require('bcryptjs');
 const { createClient } = require('@supabase/supabase-js');
 const nodemailer=require('nodemailer');
+const supabase = createClient(
+  process.env.SUPABASE_URL,
+  process.env.SUPABASE_SECRET_KEY
+);
 
 const app=express();
 app.use(express.json({limit:'2mb'}));
