@@ -1154,13 +1154,26 @@ window.addEventListener('focus', restorePendingAuth);
 </style>
   <script>
 window.addEventListener('message', function(event) {
-  if (event.data && event.data.type === 'TRENDORA_NEXT') {
-    console.log('Trendora received NEXT from extension');
 
-    // اختبار فقط حاليًا
-    alert('Trendora received NEXT');
+  if (!event.data) return;
+
+  if (event.data.type === 'TRENDORA_NEXT') {
+    nextStep();
   }
+
+  if (event.data.type === 'TRENDORA_PREVIOUS') {
+    prevStep();
+  }
+
+  if (event.data.type === 'TRENDORA_DONE') {
+    markCurrentDone();
+  }
+
+  if (event.data.type === 'TRENDORA_RESET') {
+    resetStep();
+  }
+
 });
-</script>
+  </script>
 </body>
 </html>
