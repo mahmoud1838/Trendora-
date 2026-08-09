@@ -1079,5 +1079,64 @@ window.addEventListener('focus', restorePendingAuth);
     });
   }
               </script>
+  <!-- Trendora Internal Browser -->
+<div id="internalBrowser" class="internal-browser hidden">
+  <div class="internal-browser-header">
+    <div id="internalBrowserTitle">Website</div>
+
+    <button type="button" onclick="closeInternalBrowser()">
+      ✕ Close
+    </button>
+  </div>
+
+  <iframe
+    id="internalBrowserFrame"
+    title="Trendora Internal Browser"
+    allow="clipboard-read; clipboard-write"
+  ></iframe>
+</div>
+
+<style>
+.internal-browser{
+  position:fixed;
+  inset:0;
+  z-index:99999;
+  background:#fff;
+  display:flex;
+  flex-direction:column;
+}
+
+.internal-browser.hidden{
+  display:none;
+}
+
+.internal-browser-header{
+  height:58px;
+  flex:0 0 58px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding:8px 14px;
+  background:#182033;
+  color:#fff;
+  font-weight:700;
+}
+
+.internal-browser-header button{
+  background:#e52b2b;
+  color:#fff;
+  padding:10px 16px;
+  border-radius:12px;
+}
+
+#internalBrowserFrame{
+  width:100%;
+  height:100%;
+  flex:1;
+  border:0;
+  background:#fff;
+}
+</style>
 </body>
 </html>
