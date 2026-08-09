@@ -673,23 +673,39 @@ forgotPassword=requestPasswordReset;
 <script>
 let authModalState={mode:'',email:'',timer:null};
 function openAuthModal(mode,email){
-  authModalState={mode,email,timer:null};
+  authModalState={mode,email,timer:null,codeVerified:false};
 
   localStorage.setItem('trendoraPendingAuth', JSON.stringify({
     mode: mode,
     email: email
   }));
+
   $('authModal').classList.remove('hidden');
   $('authModalMsg').innerHTML='';
+
   $('codeFields').classList.remove('hidden');
-  $('resetPasswordFields').classList.toggle('hidden',mode!=='reset');
-  $('authModalTitle').textContent=mode==='reset'?'Reset your password':'Verify your email';
-  $('authModalSub').textContent=(mode==='reset'?'We sent a password reset code to ':'We sent a verification code to ')+email;
-  $('authModalPrimary').textContent=mode==='reset'?'Reset Password':'Verify Email';
+
+  // Password fields stay hidden until the reset code is verified
+  $('resetPasswordFields').classList.add('hidden');
+
+  $('authModalTitle').textContent =
+    mode==='reset' ? 'Verify reset code' : 'Verify your email';
+
+  $('authModalSub').textContent =
+    (mode==='reset'
+      ? 'Enter the password reset code sent to '
+      : 'We sent a verification code to ')
+    + email;
+
+  $('authModalPrimary').textContent =
+    mode==='reset' ? 'Verify Code' : 'Verify Email';
+
   document.querySelectorAll('.code-digit').forEach(x=>x.value='');
+
   document.querySelector('.code-digit').focus();
+
   startCodeTimer(600);
-}
+    }
 function closeAuthModal(){
   if(authModalState.timer)clearInterval(authModalState.timer);
   localStorage.removeItem('trendoraPendingAuth');
