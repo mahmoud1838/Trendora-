@@ -418,7 +418,63 @@ app.post('/api/auth/reset-password', async (req, res) => {
     });
   }
 });
+app.post('/api/auth/verify-reset-code', async (req, res) => {
+  try {
+    const { email, code } = req.body;
 
+    const normalized = String(email || '').trim().toLowerCase();
+
+    if (!/^\d{6}$/.test(String(code || ''))) {
+      return res.status(400).json({
+        error: 'Invalid or expired reset code.'
+      });
+    }
+
+    const { data: user, error: userError } = await supabase
+      .from('users')
+      .select('id')
+      .eq('email', normalized)
+      .maybeSingle();
+
+    if (userError) throw userError;
+
+    if (!user) {
+      return res.status(400).json({
+        error: 'Invalid or expired reset code.'
+      });
+    }
+
+    const { data: rows, error } = await supabase
+      .from('verification_codes')
+      .select('*')
+      .eq('user_id', user.id)
+      .eq('purpose', 'reset')
+      .eq('used', 0)
+      .order('id', { ascending: false })
+      .limit(1);
+
+    if (error) throw error;
+
+    const row = rows && rows[0];
+
+    if (
+      !row ||
+      Date.now() > row.expires_at ||
+      row.code_hash !== hashCode(String(code))
+    ) {
+      return res.status(400).json({
+        error: 'Invalid or expired reset code.'
+      });
+    }
+
+    res.json({ ok: true });
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({
+      error: 'Could not verify reset code.'
+    });
+  }
+});
 app.post('/api/auth/change-password', auth, async (req, res) => {
   try {
     const { currentPassword, newPassword } = req.body;
