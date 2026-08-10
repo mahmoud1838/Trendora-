@@ -1280,7 +1280,14 @@ window.addEventListener("load", function () {
 
   setTimeout(function () {
     var splash = document.getElementById("splashScreen");
-    if (splash) splash.remove();
+    if (splash) {
+  splash.style.transition = "opacity .6s ease";
+  splash.style.opacity = "0";
+
+  setTimeout(function () {
+    splash.remove();
+  }, 600);
+}
   }, 3500);
 
 });
