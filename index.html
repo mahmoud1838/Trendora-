@@ -664,11 +664,11 @@ async function saveProfile(){
 
   try{
     if(avatarInput.files&&avatarInput.files[0]){
-      avatar=await fileToDataURL(avatarInput.files[0]);
+      avatar = await compressImage(avatarInput.files[0]);
     }
 
     if(coverInput.files&&coverInput.files[0]){
-      cover=await fileToDataURL(coverInput.files[0]);
+      cover = await compressImage(coverInput.files[0]);
     }
 
 const r = await api('/api/me', {
@@ -710,6 +710,46 @@ const r = await api('/api/me', {
   }
 }
 
+  async function compressImage(file){
+  return new Promise((resolve)=>{
+
+    const img = new Image();
+    const reader = new FileReader();
+
+    reader.onload = e => img.src = e.target.result;
+
+    img.onload = () => {
+
+      let w = img.width;
+      let h = img.height;
+
+      const max = 1000;
+
+      if(w > h){
+        if(w > max){
+          h *= max / w;
+          w = max;
+        }
+      }else{
+        if(h > max){
+          w *= max / h;
+          h = max;
+        }
+      }
+
+      const canvas = document.createElement("canvas");
+      canvas.width = w;
+      canvas.height = h;
+
+      canvas.getContext("2d").drawImage(img,0,0,w,h);
+
+      resolve(canvas.toDataURL("image/jpeg",0.8));
+    };
+
+    reader.readAsDataURL(file);
+
+  });
+}
 function fileToDataURL(file){
   return new Promise((resolve,reject)=>{
     const reader=new FileReader();
