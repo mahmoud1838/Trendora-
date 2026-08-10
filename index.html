@@ -1267,21 +1267,25 @@ if ('serviceWorker' in navigator) {
   });
 }
 </script>
-
 <script>
-setTimeout(function(){
+lottie.loadAnimation({
+  container: document.getElementById("lottieSplash"),
+  renderer: "svg",
+  loop: true,
+  autoplay: true,
+  path: "Workflow (2).json"
+});
 
-  var splash = document.getElementById('splashScreen');
+setTimeout(function () {
 
-  if(splash){
+  var splash = document.getElementById("splashScreen");
+
+  if (splash) {
     splash.remove();
   }
 
-},3000);
+}, 3000);
 </script>
-
-</script>
-
 <style>
 .internal-browser{
   position:fixed;
