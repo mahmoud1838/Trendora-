@@ -1308,8 +1308,9 @@ window.addEventListener("load", function () {
   setTimeout(function () {
     var splash = document.getElementById("splashScreen");
     if (splash) {
-  splash.style.transition = "opacity .6s ease";
+  splash.style.transition = "opacity .6s ease, transform .6s ease";
   splash.style.opacity = "0";
+  splash.style.transform = "scale(1.02)";
 
   setTimeout(function () {
     splash.remove();
