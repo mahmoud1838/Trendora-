@@ -916,23 +916,21 @@ function applyRemoteAccount(u){
 </script>
 
 <script>
-/* V6 overrides */
 const _oldShowPage = showPage;
+
 showPage = function(p){
   _oldShowPage(p);
+
   if(p==='profile'){
     const security=document.getElementById('securityPanel');
     if(security) security.classList.remove('hidden');
   }
 };
-// const _oldCreateAccount=createAccount;
-// createAccount=createAccountV6;
 
-// const _oldSignIn=signIn;
-// signIn=signInV6;
-
-// logout = logoutV6;
-// forgotPassword=requestPasswordReset;
+createAccount = createAccountV6;
+signIn = signInV6;
+logout = logoutV6;
+forgotPassword = requestPasswordReset;
 </script>
 
 <div id="authModal" class="auth-modal hidden">
