@@ -39,14 +39,53 @@ button.primary{background:#2867df;color:#fff}button.danger{background:#e52b2b;co
 .code-input{display:flex;gap:8px;justify-content:center;margin:18px 0}.code-input input{width:48px;height:58px;text-align:center;font-size:24px;font-weight:700;padding:0}
 .countdown{text-align:center;margin:10px 0;font-size:14px}.modal-actions{display:flex;gap:10px;flex-wrap:wrap}.modal-actions button{flex:1}
 .profile-cover{background-size:cover;background-position:center}
-  #progressCard{
+
+#progressCard{
   margin-bottom:20px;
 }
 
 #progressText{
   text-align:center;
   color:#182033;
+}
+
+#splashScreen{
+  position:fixed;
+  inset:0;
+  background:#182033;
+  z-index:999999;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:white;
+}
+
+#splashLogo{
+  text-align:center;
+}
+
+.splashStep{
+  opacity:0;
+  animation:fadeIn .4s forwards;
+}
+
+.splashStep:nth-child(1){animation-delay:.2s;}
+.splashStep:nth-child(2){animation-delay:.5s;}
+.splashStep:nth-child(3){animation-delay:.8s;}
+.splashStep:nth-child(4){animation-delay:1.1s;}
+.splashStep:nth-child(5){animation-delay:1.4s;}
+
+@keyframes fadeIn{
+  from{
+    opacity:0;
+    transform:translateY(20px);
   }
+
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
+}
 </style>
 </head>
 <body>
