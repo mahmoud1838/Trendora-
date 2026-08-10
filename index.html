@@ -72,8 +72,20 @@ button.primary{background:#2867df;color:#fff}button.danger{background:#e52b2b;co
     width:240px;
     height:240px;
     margin:auto;
+    animation: zoomIn .8s ease;
 }
 
+@keyframes zoomIn{
+    from{
+        transform:scale(.85);
+        opacity:0;
+    }
+
+    to{
+        transform:scale(1);
+        opacity:1;
+    }
+}
 .logo{
     margin-top:20px;
     color:white;
