@@ -722,6 +722,7 @@ app.put('/api/me', auth, async (req, res) => {
       .eq('id', req.user.id)
       .select()
       .single();
+    console.log(data);
 
     if (error) throw error;
 
