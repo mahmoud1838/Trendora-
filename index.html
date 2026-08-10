@@ -1223,14 +1223,16 @@ document.addEventListener('visibilitychange', function(){
 window.addEventListener('focus', restorePendingAuth);
 </script>
   <script>
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('/pwabuilder-sw.js')
-        .then(() => console.log('Service Worker registered successfully'))
-        .catch((error) => console.error('Service Worker registration failed:', error));
-    });
-  }
-    </script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/pwabuilder-sw.js')
+      .then(() => console.log('Service Worker registered successfully'))
+      .catch((error) => console.error('Service Worker registration failed:', error));
+  });
+}
+</script>
+
+<script>
 setTimeout(function(){
 
   var splash = document.getElementById('splashScreen');
@@ -1240,6 +1242,7 @@ setTimeout(function(){
   }
 
 },3000);
+</script>
 
 </script>
 
