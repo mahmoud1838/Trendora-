@@ -63,7 +63,46 @@ button.primary{background:#2867df;color:#fff}button.danger{background:#e52b2b;co
 #splashLogo{
   text-align:center;
 }
+#splashContent{
+    text-align:center;
+}
 
+#lottieSplash{
+    width:240px;
+    height:240px;
+    margin:auto;
+}
+
+.logo{
+    margin-top:20px;
+    color:white;
+    font-size:42px;
+    font-weight:900;
+    letter-spacing:8px;
+    opacity:0;
+    animation:fadeUp .8s forwards;
+    animation-delay:.4s;
+}
+
+.tagline{
+    color:#c7d2e8;
+    font-size:18px;
+    letter-spacing:2px;
+    opacity:0;
+    animation:fadeUp .8s forwards;
+    animation-delay:.9s;
+}
+
+@keyframes fadeUp{
+    from{
+        opacity:0;
+        transform:translateY(20px);
+    }
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
 .splashStep{
   opacity:0;
   animation:fadeIn .4s forwards;
