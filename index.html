@@ -605,11 +605,40 @@ function renderProfileUI(){
   $('dashboardCover').style.backgroundColor=p.cover?'':'#e8edf5';
 }
 function renderDashboard(){
-  const total=data.length,done=data.filter(x=>x.status==='done').length,progress=data.filter(x=>x.status==='progress').length;
+
+  const total=data.length;
+
+  const done=data.filter(
+    x=>x.status==='done'
+  ).length;
+
+  const progress=data.filter(
+    x=>x.status==='progress'
+  ).length;
+
+  const percent=
+    total===0
+      ? 0
+      : Math.round((done/total)*100);
+
   $('dashboardStats').innerHTML=
     '<div class="stat"><strong>'+total+'</strong>Steps</div>'+
     '<div class="stat"><strong>'+done+'</strong>Done</div>'+
     '<div class="stat"><strong>'+progress+'</strong>In Progress</div>';
+
+  const bar=$('progressBar');
+
+  const txt=$('progressText');
+
+  if(bar){
+    bar.style.width=percent+'%';
+  }
+
+  if(txt){
+    txt.innerHTML=
+      percent+'%<br>'+
+      done+' / '+total+' Tasks Completed';
+  }
 }
 function exportWorkflow(){
   persist();
