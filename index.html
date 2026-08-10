@@ -1215,7 +1215,34 @@ window.addEventListener('focus', restorePendingAuth);
         .catch((error) => console.error('Service Worker registration failed:', error));
     });
   }
-              </script>
+    <script>
+
+window.addEventListener('load',()=>{
+
+  setTimeout(()=>{
+
+    const splash=
+      document.getElementById(
+        'splashScreen'
+      );
+
+    if(splash){
+
+      splash.style.transition=
+        'opacity .6s';
+
+      splash.style.opacity='0';
+
+      setTimeout(()=>{
+        splash.remove();
+      },600);
+    }
+
+  },2500);
+
+});
+
+</script>
 
 <style>
 .internal-browser{
