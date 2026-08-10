@@ -1231,31 +1231,15 @@ window.addEventListener('focus', restorePendingAuth);
     });
   }
     <script>
+setTimeout(function(){
 
-window.addEventListener('load',()=>{
+  var splash = document.getElementById('splashScreen');
 
-  setTimeout(()=>{
+  if(splash){
+    splash.remove();
+  }
 
-    const splash=
-      document.getElementById(
-        'splashScreen'
-      );
-
-    if(splash){
-
-      splash.style.transition=
-        'opacity .6s';
-
-      splash.style.opacity='0';
-
-      setTimeout(()=>{
-        splash.remove();
-      },600);
-    }
-
-  },2500);
-
-});
+},3000);
 
 </script>
 
