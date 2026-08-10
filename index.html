@@ -1268,23 +1268,22 @@ if ('serviceWorker' in navigator) {
 }
 </script>
 <script>
-lottie.loadAnimation({
-  container: document.getElementById("lottieSplash"),
-  renderer: "svg",
-  loop: true,
-  autoplay: true,
-  path: "Workflow (2).json"
+window.addEventListener("load", function () {
+
+  lottie.loadAnimation({
+    container: document.getElementById("lottieSplash"),
+    renderer: "svg",
+    loop: true,
+    autoplay: true,
+    path: "Workflow (2).json"
+  });
+
+  setTimeout(function () {
+    var splash = document.getElementById("splashScreen");
+    if (splash) splash.remove();
+  }, 3000);
+
 });
-
-setTimeout(function () {
-
-  var splash = document.getElementById("splashScreen");
-
-  if (splash) {
-    splash.remove();
-  }
-
-}, 3000);
 </script>
 <style>
 .internal-browser{
