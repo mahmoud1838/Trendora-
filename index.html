@@ -1312,12 +1312,16 @@ window.addEventListener("load", function () {
 
   if (splash) {
 
-    splash.style.transition = "opacity 2s ease";
-    splash.style.opacity = "0";
+    requestAnimationFrame(function () {
 
-    setTimeout(function () {
-      splash.remove();
-    }, 2000);
+  splash.style.transition = "opacity .6s ease";
+  splash.style.opacity = "0";
+
+  setTimeout(function () {
+    splash.remove();
+  }, 600);
+
+});
 
   }
 
