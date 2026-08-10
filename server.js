@@ -724,7 +724,14 @@ app.put('/api/me', auth, async (req, res) => {
 
     if (error) throw error;
 
-    res.json({ user: data });
+    res.json({
+  success: true,
+  received: {
+    firstName,
+    lastName
+  },
+  saved: data
+});
   } catch (e) {
     console.error(e);
     res.status(500).json({ error: 'Could not update profile.' });
