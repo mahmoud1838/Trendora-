@@ -707,6 +707,7 @@ app.get('/api/me', auth, async (req, res) => {
   }
 });
 app.put('/api/me', auth, async (req, res) => {
+  console.log(req.body);
   try {
     const { firstName, lastName, avatar, cover } = req.body;
 
