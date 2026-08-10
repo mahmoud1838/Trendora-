@@ -671,8 +671,15 @@ async function saveProfile(){
       cover=await fileToDataURL(coverInput.files[0]);
     }
 
-    const r=await api('/api/me',{
-      method:'PUT',
+// const r=await api('/api/me',{
+//   method:'PUT',
+//   body:JSON.stringify({
+//     firstName:first,
+//     lastName:last,
+//     avatar:avatar,
+//     cover:cover
+//   })
+// });      method:'PUT',
       body:JSON.stringify({
         firstName:first,
         lastName:last,
