@@ -441,8 +441,27 @@ function logout(){
 function startApp(){
   $('auth').classList.add('hidden');
   $('app').classList.remove('hidden');
-  const a=JSON.parse(localStorage.getItem('trendoraAccount')||'{}');
-  $('welcome').textContent='Welcome, '+(a.first||'User')+'!';
+  const a = JSON.parse(localStorage.getItem('trendoraAccount') || '{}');
+
+$('welcome').textContent = 'Loading...';
+
+api('/api/me')
+.then(res => {
+
+    applyRemoteAccount(res.user);
+
+    $('welcome').textContent =
+        'Welcome, ' + (res.user.firstName || 'User') + '!';
+
+    renderProfileUI();
+
+})
+.catch(() => {
+
+    $('welcome').textContent =
+        'Welcome, ' + (a.first || 'User') + '!';
+
+});
   renderSettings();
   renderStep();
   renderDashboard();
