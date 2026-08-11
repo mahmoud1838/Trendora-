@@ -968,9 +968,29 @@ async function logoutV6(){
   showLogin();
 }
 function applyRemoteAccount(u){
-  const a=JSON.parse(localStorage.getItem('trendoraAccount')||'{}');
-  a.first=u.firstName;a.last=u.lastName;a.email=u.email;
-  localStorage.setItem('trendoraAccount',JSON.stringify(a));
+
+  const a = JSON.parse(
+    localStorage.getItem('trendoraAccount') || '{}'
+  );
+
+  a.first = u.firstName;
+  a.last = u.lastName;
+  a.email = u.email;
+
+  if(u.avatar){
+    a.avatar = u.avatar;
+  }
+
+  if(u.cover){
+    a.cover = u.cover;
+  }
+
+  localStorage.setItem(
+    'trendoraAccount',
+    JSON.stringify(a)
+  );
+
+  renderProfileUI();
 }
 </script>
 
