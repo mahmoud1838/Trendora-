@@ -136,6 +136,35 @@ function base64ToBuffer(dataUrl) {
     buffer: Buffer.from(matches[2], 'base64')
   };
 }
+async function uploadBase64ToStorage(dataUrl, folder, userId) {
+  if (!isBase64Image(dataUrl)) {
+    return dataUrl;
+  }
+
+  const { mime, buffer } = base64ToBuffer(dataUrl);
+
+  const ext = mime.split('/')[1] || 'png';
+
+  const fileName =
+    `${folder}/${userId}/${Date.now()}.${ext}`;
+
+  const { error } = await supabase.storage
+    .from('profile-images')
+    .upload(fileName, buffer, {
+      contentType: mime,
+      upsert: true
+    });
+
+  if (error) {
+    throw error;
+  }
+
+  const { data } = supabase.storage
+    .from('profile-images')
+    .getPublicUrl(fileName);
+
+  return data.publicUrl;
+}
 const JWT_SECRET = process.env.JWT_SECRET;
 
 if (!JWT_SECRET) {
