@@ -881,11 +881,6 @@ function renderDashboard(){
       ? 0
       : Math.round((done/total)*100);
 
-  $('dashboardStats').innerHTML=
-    '<div class="stat"><strong>'+total+'</strong>Steps</div>'+
-    '<div class="stat"><strong>'+done+'</strong>Done</div>'+
-    '<div class="stat"><strong>'+progress+'</strong>In Progress</div>';
-
   const bar=$('progressBar');
 
   const txt=$('progressText');
