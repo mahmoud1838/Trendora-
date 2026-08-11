@@ -719,6 +719,9 @@ app.put('/api/me', auth, async (req, res) => {
   try {
     const { firstName, lastName, avatar, cover } = req.body;
 
+let avatarUrl = avatar || '';
+let coverUrl = cover || '';
+
     const { data, error } = await supabase
       .from('users')
       .update({
