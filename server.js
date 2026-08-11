@@ -762,14 +762,33 @@ app.put('/api/me', auth, async (req, res) => {
   try {
     const { firstName, lastName, avatar, cover } = req.body;
 
+let avatarUrl = avatar || '';
+let coverUrl = cover || '';
+
+if (isBase64Image(avatar)) {
+  avatarUrl = await uploadBase64ToStorage(
+    avatar,
+    'avatars',
+    req.user.id
+  );
+}
+
+if (isBase64Image(cover)) {
+  coverUrl = await uploadBase64ToStorage(
+    cover,
+    'covers',
+    req.user.id
+  );
+}
+
     const { data, error } = await supabase
       .from('users')
       .update({
-        first_name: firstName,
-        last_name: lastName,
-        avatar: avatar || '',
-        cover: cover || ''
-      })
+  first_name: firstName,
+  last_name: lastName,
+  avatar: avatarUrl,
+  cover: coverUrl
+})
       .eq('id', req.user.id)
       .select()
       .single();
