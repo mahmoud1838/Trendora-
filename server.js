@@ -787,11 +787,11 @@ if (isBase64Image(cover)) {
     const { data, error } = await supabase
       .from('users')
       .update({
-        first_name: firstName,
-        last_name: lastName,
-        avatar: avatar || '',
-        cover: cover || ''
-      })
+  first_name: firstName,
+  last_name: lastName,
+  avatar: avatarUrl,
+  cover: coverUrl
+})
       .eq('id', req.user.id)
       .select()
       .single();
