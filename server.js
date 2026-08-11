@@ -768,6 +768,21 @@ app.put('/api/me', auth, async (req, res) => {
 
 let avatarUrl = avatar || '';
 let coverUrl = cover || '';
+    if (isBase64Image(avatar)) {
+  avatarUrl = await uploadBase64ToStorage(
+    avatar,
+    'avatars',
+    req.user.id
+  );
+}
+
+if (isBase64Image(cover)) {
+  coverUrl = await uploadBase64ToStorage(
+    cover,
+    'covers',
+    req.user.id
+  );
+}
 
     const { data, error } = await supabase
       .from('users')
