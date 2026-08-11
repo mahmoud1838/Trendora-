@@ -513,11 +513,34 @@ api('/api/me')
   showPage('dashboard');
 }
 function showPage(p){
-  ['dashboard','workflow','settings','profile'].forEach(x=>$(x).classList.toggle('hidden',x!==p));
-  if(p==='settings')renderSettings();
-  if(p==='workflow')renderStep();
-  if(p==='dashboard'){renderDashboard();renderProfileUI();}
-  if(p==='profile')renderProfileUI();
+
+  ['dashboard','workflow','settings','profile'].forEach(x =>
+    $(x).classList.toggle('hidden', x !== p)
+  );
+
+  document.querySelectorAll('.bottom-nav button')
+    .forEach(btn => btn.classList.remove('active'));
+
+  if(p==='dashboard'){
+    renderDashboard();
+    renderProfileUI();
+    $('navDashboard').classList.add('active');
+  }
+
+  if(p==='workflow'){
+    renderStep();
+    $('navWorkflow').classList.add('active');
+  }
+
+  if(p==='settings'){
+    renderSettings();
+    $('navSettings').classList.add('active');
+  }
+
+  if(p==='profile'){
+    renderProfileUI();
+    $('navProfile').classList.add('active');
+  }
 }
 function statusLabel(s){
   return s==='done'?'Done':s==='progress'?'In Progress':'Not Started';
