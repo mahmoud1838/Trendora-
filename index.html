@@ -386,7 +386,27 @@ button.primary{background:#2867df;color:#fff}button.danger{background:#e52b2b;co
   </div>
 </section>
 </div>
+  <div class="bottom-nav hidden" id="bottomNav">
+  <button id="navDashboard" onclick="showPage('dashboard')">
+    🏠
+    <span>Home</span>
+  </button>
 
+  <button id="navWorkflow" onclick="showPage('workflow')">
+    📋
+    <span>Workflow</span>
+  </button>
+
+  <button id="navSettings" onclick="showPage('settings')">
+    ⚙️
+    <span>Settings</span>
+  </button>
+
+  <button id="navProfile" onclick="showPage('profile')">
+    👤
+    <span>Profile</span>
+  </button>
+  </div>
 <script>
 const $=id=>document.getElementById(id);
 
