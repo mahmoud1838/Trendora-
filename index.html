@@ -153,6 +153,50 @@ button.primary{background:#2867df;color:#fff}button.danger{background:#e52b2b;co
     transform:translateY(0);
   }
 }
+  .bottom-nav{
+  position:fixed;
+  left:50%;
+  bottom:18px;
+  transform:translateX(-50%);
+  width:92%;
+  max-width:520px;
+  height:72px;
+  background:#ffffff;
+  border-radius:24px;
+  display:flex;
+  justify-content:space-around;
+  align-items:center;
+  box-shadow:0 10px 30px rgba(0,0,0,.12);
+  z-index:9999;
+}
+
+.bottom-nav button{
+  flex:1;
+  height:100%;
+  border:none;
+  background:none;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  color:#8b95a7;
+  font-size:24px;
+  cursor:pointer;
+}
+
+.bottom-nav button span{
+  font-size:11px;
+  margin-top:4px;
+  font-weight:600;
+}
+
+.bottom-nav button:hover{
+  color:#2563eb;
+}
+
+.wrap{
+  padding-bottom:110px;
+}
 </style>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
 </head>
