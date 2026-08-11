@@ -7,10 +7,17 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const nodemailer = require('nodemailer');
 const { createClient } = require('@supabase/supabase-js');
+const multer = require('multer');
 const fs = require('fs');
 const os = require('os');
 
 const app = express();
+const upload = multer({
+  storage: multer.memoryStorage(),
+  limits: {
+    fileSize: 5 * 1024 * 1024
+  }
+});
 app.use(express.static(__dirname));
 app.get('/manifest.json', (req, res) => {
   res.status(200);
