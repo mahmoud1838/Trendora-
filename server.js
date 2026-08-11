@@ -117,7 +117,25 @@ const supabase = createClient(
   process.env.SUPABASE_URL,
   process.env.SUPABASE_SECRET_KEY
 );
+function isBase64Image(value) {
+  return (
+    typeof value === 'string' &&
+    value.startsWith('data:image/')
+  );
+}
 
+function base64ToBuffer(dataUrl) {
+  const matches = dataUrl.match(/^data:(.+);base64,(.+)$/);
+
+  if (!matches) {
+    throw new Error('Invalid image data.');
+  }
+
+  return {
+    mime: matches[1],
+    buffer: Buffer.from(matches[2], 'base64')
+  };
+}
 const JWT_SECRET = process.env.JWT_SECRET;
 
 if (!JWT_SECRET) {
