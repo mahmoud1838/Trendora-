@@ -701,6 +701,20 @@ function saveSettings(){
   persist();renderStep();renderSettings();renderDashboard();
   msg('settingsMsg','All changes saved successfully.','ok');
 }
+  function saveSingleStep(i){
+  const inputs = document.querySelectorAll('#settingsList [data-i="'+i+'"]');
+
+  inputs.forEach(x=>{
+    data[i][x.dataset.k] = x.value;
+  });
+
+  persist();
+  renderStep();
+  renderSettings();
+  renderDashboard();
+
+  msg('settingsMsg','Step '+(i+1)+' saved successfully.','ok');
+  }
 function getProfile(){
   const a=JSON.parse(localStorage.getItem('trendoraAccount')||'{}');
   return {
