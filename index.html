@@ -685,6 +685,7 @@ function renderSettings(){
       '<button type="button" onclick="moveStep('+i+',1)" '+(i===data.length-1?'disabled':'')+'>↓ Down</button>'+
       '<button type="button" onclick="duplicateStep('+i+')">📋 Duplicate</button>'+
       '<button type="button" class="danger" onclick="deleteStep('+i+')">Delete</button>'+
+      '<button type="button" onclick="saveSingleStep('+i+')">💾 Save</button>'+
       '</div>';
     el.querySelector('[data-k="site"]').value=d.site||'';
     el.querySelector('[data-k="title"]').value=d.title||'';
