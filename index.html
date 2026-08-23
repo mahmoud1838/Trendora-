@@ -878,7 +878,8 @@ function renderDashboard(){
   const done=data.filter(
     x=>x.status==='done'
   ).length;
-
+document.getElementById('doneCount').textContent =
+  data.filter(x => x.status === 'done').length;
   const progress=data.filter(
     x=>x.status==='progress'
   ).length;
